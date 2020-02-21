@@ -22,37 +22,8 @@ struct ListView: View {
     }
 }
 
-extension ListView {
-    struct Element: Identifiable {
-        let id: Int
-        let title: String
-        let thumbnail: Thumbnail
-    }
-    
-    struct Thumbnail {
-        let image: UIImage
-        let size: CGSize
-    }
-}
-
-
 struct ListView_Previews: PreviewProvider {
     static var previews: some View {
-        ListView(elements: [.fixture(), .fixture(), .fixture()])
+        ListView(elements: [.fixture(isFavourite: true), .fixture(), .fixture()])
     }
 }
-
-#if DEBUG
-extension ListView.Element {
-    static func fixture() -> ListView.Element {
-        .init(
-            id: 47,
-            title: "et soluta est",
-            thumbnail: .init(
-                image: UIImage(named: "thumbnail_mock")!,
-                size: CGSize(width: 150, height: 150)
-            )
-        )
-    }
-}
-#endif

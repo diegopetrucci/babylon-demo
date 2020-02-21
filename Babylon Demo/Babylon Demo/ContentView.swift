@@ -1,21 +1,23 @@
-//
-//  ContentView.swift
-//  Babylon Demo
-//
-//  Created by Diego Petrucci on 21/02/2020.
-//  Copyright © 2020 Diego Petrucci. All rights reserved.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    // TODO @State
+    let elements: [ListView.Element]?
+    
     var body: some View {
-        Text("Hello, World!")
+        Group {
+            // TODO if let having downloaded photos
+            if elements != nil {
+                ListView(elements: elements!)
+            } else {
+                Text("Data has not loaded yet")
+            }
+        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(elements: [.fixture(), .fixture(), .fixture()])
     }
 }

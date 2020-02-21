@@ -16,6 +16,7 @@
 		6CB3162724007B50002A644C /* Babylon_DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3162624007B50002A644C /* Babylon_DemoTests.swift */; };
 		6CB3163224007B51002A644C /* Babylon_DemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3163124007B51002A644C /* Babylon_DemoUITests.swift */; };
 		6CB3164024007DE7002A644C /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3163F24007DE7002A644C /* ListView.swift */; };
+		6CB31642240082AC002A644C /* Remote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB31641240082AC002A644C /* Remote.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		6CB3163124007B51002A644C /* Babylon_DemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Babylon_DemoUITests.swift; sourceTree = "<group>"; };
 		6CB3163324007B51002A644C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6CB3163F24007DE7002A644C /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		6CB31641240082AC002A644C /* Remote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Remote.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				6CB3161124007B4E002A644C /* SceneDelegate.swift */,
 				6CB3161324007B4E002A644C /* ContentView.swift */,
 				6CB3163F24007DE7002A644C /* ListView.swift */,
+				6CB31641240082AC002A644C /* Remote.swift */,
 				6CB3161524007B50002A644C /* Assets.xcassets */,
 				6CB3161A24007B50002A644C /* LaunchScreen.storyboard */,
 				6CB3161D24007B50002A644C /* Info.plist */,
@@ -270,6 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CB31642240082AC002A644C /* Remote.swift in Sources */,
 				6CB3164024007DE7002A644C /* ListView.swift in Sources */,
 				6CB3161024007B4E002A644C /* AppDelegate.swift in Sources */,
 				6CB3161224007B4E002A644C /* SceneDelegate.swift in Sources */,

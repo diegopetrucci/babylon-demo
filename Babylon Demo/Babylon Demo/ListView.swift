@@ -9,11 +9,12 @@ struct ListView: View {
         List(elements, id: \.id) { element in
             HStack(spacing: 10) {
                 Image(uiImage: element.thumbnail.image)
-                .resizable()
+                    .resizable()
                     .frame(
-                        idealWidth: element.thumbnail.size.width,
-                        idealHeight: element.thumbnail.size.height
+                        maxWidth: element.thumbnail.size.width,
+                        maxHeight: element.thumbnail.size.height
                     )
+                    .aspectRatio(contentMode: .fit)
                 Text(element.title)
                 Spacer()
             }

@@ -46,8 +46,9 @@ extension Remote {
                 let data = data,
                 let statusCode = (response as? HTTPURLResponse)?.statusCode
             else {
-                    completion(.failure(.unknown))
-                    return
+                
+                completion(.failure(.unknown))
+                return
             }
             
             guard statusCode == 200 else {

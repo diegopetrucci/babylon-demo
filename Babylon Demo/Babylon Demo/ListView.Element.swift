@@ -4,12 +4,12 @@ extension ListView {
     struct Element: Identifiable {
         let id: Int
         let title: String
-        let thumbnail: Thumbnail
-        let isFavourite: Bool
+        var thumbnail: Thumbnail
+        var isFavourite: Bool
     }
     
     struct Thumbnail {
-        let image: UIImage
+        var image: UIImage?
         let size: CGSize
     }
 }

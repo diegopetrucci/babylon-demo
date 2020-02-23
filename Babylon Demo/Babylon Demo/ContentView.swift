@@ -27,7 +27,7 @@ extension ContentView {
                     DispatchQueue.main.async {
                         self.elements = photos
                             .map(toElement)
-                            .sorted(by: isFavourited)
+                            .sorted(by: isSortedByFavourites)
                     }
                     
                     self.updateThumbnails(from: photos)
@@ -43,6 +43,9 @@ extension ContentView {
     private func updateThumbnails(from photos: [Photo]) {
         // We try to fetch the images at the top first
         photos.sorted(by: { $0.id < $1.id }).forEach { photo in
+            // the poor man's pagination :D
+            guard photo.id < 100 else { return }
+            
             Remote().load(url: photo.thumbnailURL) { (result: Result<Data, RemoteError>) in
                 guard let index = self.elements.firstIndex(where: { $0.id == photo.id })  else { return }
                 
@@ -69,7 +72,7 @@ private func toElement(photo: Photo) -> ListView.Element {
     )
 }
 
-private func isFavourited(firstElement: ListView.Element, secondElement: ListView.Element) -> Bool {
+func isSortedByFavourites(firstElement: ListView.Element, secondElement: ListView.Element) -> Bool {
     switch (firstElement.isFavourite, secondElement.isFavourite) {
     case (true, true), (false, false):
         return firstElement.id < secondElement.id

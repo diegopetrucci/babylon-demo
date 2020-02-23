@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var elements: [ListView.Element] {
-    }
+    let url: URL
+    
+    @State var elements: [ListView.Element]
     
     var body: some View {
         Group {
@@ -20,7 +21,7 @@ extension ContentView {
     private func onAppear() {
         DispatchQueue.global(qos: .background).async {
             Remote().load(
-            url: URL(string: "http://jsonplaceholder.typicode.com/photos")!) { (result: Result<[Photo], RemoteError>) in
+            url: self.url) { (result: Result<[Photo], RemoteError>) in
                 switch result {
                 case let .success(photos):
                     DispatchQueue.main.async {
@@ -81,6 +82,9 @@ private func isFavourited(firstElement: ListView.Element, secondElement: ListVie
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(elements: [.fixture(), .fixture(), .fixture()])
+        ContentView(
+            url: URL(string: "http://jsonplaceholder.typicode.com/photos")!,
+            elements: [.fixture(), .fixture(), .fixture()]
+        )
     }
 }

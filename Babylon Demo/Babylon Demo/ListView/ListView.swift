@@ -1,9 +1,7 @@
 import SwiftUI
 
 struct ListView: View {
-    // TODO @State
-    @Binding var elements: [Element] {
-    }
+    @Binding var elements: [Element]
     
     var body: some View {
 //         TODO handle network errors

@@ -97,6 +97,15 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		6C0D4B942402DEDF00294299 /* ListView */ = {
+			isa = PBXGroup;
+			children = (
+				6CB3163F24007DE7002A644C /* ListView.swift */,
+				6C0D4B8F24009A8F00294299 /* ListView.Element.swift */,
+			);
+			path = ListView;
+			sourceTree = "<group>";
+		};
 		6CB3160324007B4E002A644C = {
 			isa = PBXGroup;
 			children = (
@@ -124,8 +133,7 @@
 				6CB3161124007B4E002A644C /* SceneDelegate.swift */,
 				6CB3161324007B4E002A644C /* ContentView.swift */,
 				6C0D4B8B2400986100294299 /* Photo.swift */,
-				6CB3163F24007DE7002A644C /* ListView.swift */,
-				6C0D4B8F24009A8F00294299 /* ListView.Element.swift */,
+				6C0D4B942402DEDF00294299 /* ListView */,
 				6CB31641240082AC002A644C /* Remote.swift */,
 				6C0D4B932400A21F00294299 /* Utils */,
 				6CB3161524007B50002A644C /* Assets.xcassets */,

@@ -5,6 +5,7 @@ struct Photo {
     let title: String
     let url: URL
     let thumbnailURL: URL
+    let albumID: Int
 }
 
 extension Photo: Decodable {
@@ -13,5 +14,6 @@ extension Photo: Decodable {
         case title
         case url
         case thumbnailURL = "thumbnailUrl"
+        case albumID = "albumId"
     }
 }

@@ -12,6 +12,9 @@
 		6C0D4B9024009A8F00294299 /* ListView.Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0D4B8F24009A8F00294299 /* ListView.Element.swift */; };
 		6C0D4B922400A1EC00294299 /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0D4B912400A1EC00294299 /* Collection+Extensions.swift */; };
 		6C0D4B962402E5EA00294299 /* PhotoDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0D4B952402E5EA00294299 /* PhotoDetailView.swift */; };
+		6C0D4B982403270F00294299 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0D4B972403270F00294299 /* Album.swift */; };
+		6C0D4B9A2403294C00294299 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0D4B992403294C00294299 /* User.swift */; };
+		6C0D4B9D24032C7000294299 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6C0D4B9C24032C7000294299 /* README.md */; };
 		6CB3161024007B4E002A644C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3160F24007B4E002A644C /* AppDelegate.swift */; };
 		6CB3161224007B4E002A644C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3161124007B4E002A644C /* SceneDelegate.swift */; };
 		6CB3161424007B4E002A644C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3161324007B4E002A644C /* ContentView.swift */; };
@@ -47,6 +50,9 @@
 		6C0D4B8F24009A8F00294299 /* ListView.Element.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.Element.swift; sourceTree = "<group>"; };
 		6C0D4B912400A1EC00294299 /* Collection+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extensions.swift"; sourceTree = "<group>"; };
 		6C0D4B952402E5EA00294299 /* PhotoDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailView.swift; sourceTree = "<group>"; };
+		6C0D4B972403270F00294299 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
+		6C0D4B992403294C00294299 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		6C0D4B9C24032C7000294299 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		6CB3160C24007B4E002A644C /* Babylon Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Babylon Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CB3160F24007B4E002A644C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6CB3161124007B4E002A644C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -108,9 +114,20 @@
 			path = ListView;
 			sourceTree = "<group>";
 		};
+		6C0D4B9B2403298800294299 /* PhotoDetail */ = {
+			isa = PBXGroup;
+			children = (
+				6C0D4B952402E5EA00294299 /* PhotoDetailView.swift */,
+				6C0D4B972403270F00294299 /* Album.swift */,
+				6C0D4B992403294C00294299 /* User.swift */,
+			);
+			path = PhotoDetail;
+			sourceTree = "<group>";
+		};
 		6CB3160324007B4E002A644C = {
 			isa = PBXGroup;
 			children = (
+				6C0D4B9C24032C7000294299 /* README.md */,
 				6CB3160E24007B4E002A644C /* Babylon Demo */,
 				6CB3162524007B50002A644C /* Babylon DemoTests */,
 				6CB3163024007B51002A644C /* Babylon DemoUITests */,
@@ -137,7 +154,7 @@
 				6C0D4B8B2400986100294299 /* Photo.swift */,
 				6C0D4B942402DEDF00294299 /* ListView */,
 				6CB31641240082AC002A644C /* Remote.swift */,
-				6C0D4B952402E5EA00294299 /* PhotoDetailView.swift */,
+				6C0D4B9B2403298800294299 /* PhotoDetail */,
 				6C0D4B932400A21F00294299 /* Utils */,
 				6CB3161524007B50002A644C /* Assets.xcassets */,
 				6CB3161A24007B50002A644C /* LaunchScreen.storyboard */,
@@ -279,6 +296,7 @@
 			files = (
 				6CB3161C24007B50002A644C /* LaunchScreen.storyboard in Resources */,
 				6CB3161924007B50002A644C /* Preview Assets.xcassets in Resources */,
+				6C0D4B9D24032C7000294299 /* README.md in Resources */,
 				6CB3161624007B50002A644C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -312,6 +330,8 @@
 				6CB3164024007DE7002A644C /* ListView.swift in Sources */,
 				6C0D4B8E2400990800294299 /* With.swift in Sources */,
 				6CB3161024007B4E002A644C /* AppDelegate.swift in Sources */,
+				6C0D4B9A2403294C00294299 /* User.swift in Sources */,
+				6C0D4B982403270F00294299 /* Album.swift in Sources */,
 				6CB3161224007B4E002A644C /* SceneDelegate.swift in Sources */,
 				6CB3161424007B4E002A644C /* ContentView.swift in Sources */,
 			);

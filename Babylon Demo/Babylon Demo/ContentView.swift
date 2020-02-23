@@ -68,7 +68,8 @@ private func toElement(photo: Photo) -> ListView.Element {
             image: UIImage(named: "thumbnail_mock")!, // TODO point of sync
             size: CGSize(width: 100, height: 100)
         ),
-        isFavourite: false
+        isFavourite: false,
+        albumID: photo.albumID
     )
 }
 

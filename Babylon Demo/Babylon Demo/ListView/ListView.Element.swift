@@ -6,6 +6,7 @@ extension ListView {
         let title: String
         var thumbnail: Thumbnail
         var isFavourite: Bool
+        let albumID: Int
     }
     
     struct Thumbnail {
@@ -26,7 +27,7 @@ extension ListView.Element {
                 image: UIImage(named: "thumbnail_mock")!,
                 size: CGSize(width: 150, height: 150)
             ),
-            isFavourite: isFavourite
+            isFavourite: isFavourite, albumID: 1
         )
     }
 }

@@ -8,7 +8,7 @@ struct PhotoDetailView: View {
     var body: some View {
         VStack(spacing: 10) {
             photo()
-            comments()
+            commentsView()
         }.onAppear { self.onAppear(photoID: self.element.id, albumID: self.element.albumID) }
     }
 }
@@ -31,17 +31,23 @@ extension PhotoDetailView {
                 }
                 .padding()
             }
-            if author != nil {
+            authorView(name: author)
+        }
+    }
+
+    private func authorView(name: String?) -> some View {
+        Group {
+            if name != nil {
                 HStack {
                     Spacer()
-                    Text("A photo by \(author!)") // Sigh…
+                    Text("A photo by \(name!)") // Sigh…
                         .padding()
                 }
             }
         }
     }
     
-    private func comments() -> some View {
+    private func commentsView() -> some View {
         Group {
             if numberOfComments != nil {
                 HStack {

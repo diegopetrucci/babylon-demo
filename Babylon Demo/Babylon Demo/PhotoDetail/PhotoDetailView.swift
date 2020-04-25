@@ -69,6 +69,12 @@ extension PhotoDetailView {
                     .aspectRatio(contentMode: .fit)
             } else {
                 Rectangle()
+                    .opacity(0.5)
+                    .frame(
+                        width: viewModel.element.thumbnail?.size?.width ?? UIScreen.main.bounds.width,
+                        height: viewModel.element.thumbnail?.size?.height ?? 400
+                )
+                    .aspectRatio(contentMode: .fit)
             }
         }
     }

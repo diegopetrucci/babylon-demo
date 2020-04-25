@@ -7,3 +7,11 @@ extension Album: Decodable {
         case userID = "userId"
     }
 }
+
+#if DEBUG
+extension Album {
+    static func fixture() -> Self {
+        .init(userID: 36)
+    }
+}
+#endif

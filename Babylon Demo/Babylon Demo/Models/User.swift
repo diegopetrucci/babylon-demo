@@ -5,3 +5,15 @@ struct User {
 }
 
 extension User: Decodable {}
+
+#if DEBUG
+extension User {
+    static func fixture(id: Int = 3) -> Self {
+        .init(
+            id: id,
+            name: "Arthur Fonzarelli",
+            username: "fonzie74"
+        )
+    }
+}
+#endif

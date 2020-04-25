@@ -17,3 +17,17 @@ extension Photo: Decodable {
         case albumID = "albumId"
     }
 }
+
+#if DEBUG
+extension Photo {
+    static func fixture(id: Int = 46, albumID: Int = 31) -> Self {
+        .init(
+            id: id,
+            title: "et soluta est",
+            url: URL(string: "http://google.com")!,
+            thumbnailURL: URL(string: "http://google.com")!,
+            albumID: albumID
+        )
+    }
+}
+#endif

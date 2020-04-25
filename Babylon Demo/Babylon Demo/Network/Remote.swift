@@ -1,74 +1,55 @@
 import Foundation
+import Combine
+import class UIKit.UIImage
 
 protocol Remoteable {
-    func load() -> Data
-    func load<T>() -> T
+    func load<T: Decodable>(from url: URL, jsonDecoder: JSONDecoder) -> AnyPublisher<T, RemoteError>
+    func loadData(from imageURL: URL) -> AnyPublisher<Data, RemoteError>
 }
 
-final class Remote {
-    private var dataTask: URLSessionDataTask? = nil
-    
-    func load(url: URL, completion: @escaping (Result<Data, RemoteError>) -> Void) {
-        fetchData(url: url, dataTask: &dataTask, completion: completion)
+struct Remote: Remoteable {
+    func load<T: Decodable>(
+        from url: URL,
+        jsonDecoder: JSONDecoder = JSONDecoder()
+    ) -> AnyPublisher<T, RemoteError> {
+        URLSession.shared.dataTaskPublisher(for: URLRequest(url: url))
+            .mapError(RemoteError.error)
+            .tryMap(validStatusCode)
+            .decode(type: T.self, decoder: jsonDecoder)
+            .mapError(RemoteError.parsingError)
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
-    
-    func load<T: Decodable>(url: URL, completion: @escaping (Result<T, RemoteError>) -> Void) {
-        fetchData(url: url, dataTask: &dataTask) { result in
-            switch result {
-            case let .success(data):
-                let result: Result<T, RemoteError> = self.parse(data: data)
-                switch result {
-                case let .success(decoded):
-                    completion(.success(decoded))
-                case let .failure(error):
-                    completion(.failure(error))
+
+    func loadData(from imageURL: URL) -> AnyPublisher<Data, RemoteError> {
+        URLSession.shared.dataTaskPublisher(for: URLRequest(url: imageURL))
+            .mapError(RemoteError.error)
+            .tryMap(validStatusCode)
+            // ugh
+            .mapError { error in
+                if let error = error as? RemoteError {
+                    return error
+                } else {
+                    return RemoteError.unknown
                 }
-            case let .failure(error):
-                completion(.failure(error))
-            }
         }
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 }
 
 extension Remote {
-    func fetchData(
-        url: URL,
-        dataTask: inout URLSessionDataTask?,
-        completion: @escaping (Result<Data, RemoteError>) -> Void
-    ) {
-        dataTask = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
-            if let error = error {
-                completion(.failure(.error(error)))
-                return
-            }
-            
-            guard
-                let data = data,
-                let statusCode = (response as? HTTPURLResponse)?.statusCode
-            else {
-                
-                completion(.failure(.unknown))
-                return
-            }
-            
-            guard statusCode == 200 else {
-                completion(.failure(.statusCode(statusCode)))
-                return
-            }
-            
-            completion(.success(data))
-        }
-        
-        dataTask?.resume()
-    }
-    
-    func parse<T: Decodable>(data: Data) -> Result<T, RemoteError> {
-        do {
-            let result = try JSONDecoder().decode(T.self, from: data)
-            return .success(result)
-        } catch {
-            return .failure(.parsingError(error))
-        }
+    private func validStatusCode(data: Data, response: URLResponse) throws -> Data {
+        guard
+            let statusCode = (response as? HTTPURLResponse)?.statusCode
+        else { throw RemoteError.unknown }
+
+        guard
+            statusCode >= 200,
+            statusCode < 300
+        else { throw RemoteError.statusCode(statusCode) }
+
+        return data
     }
 }
 
@@ -77,4 +58,5 @@ enum RemoteError: Error {
     case statusCode(Int)
     case unknown
     case parsingError(Error)
+    case malformedImage
 }

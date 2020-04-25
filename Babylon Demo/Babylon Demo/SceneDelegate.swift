@@ -11,8 +11,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Create the SwiftUI view that provides the window contents.
         let contentView = ContentView(
-            url: URL(string: "http://jsonplaceholder.typicode.com/photos")!, // Here until I implement a routing system / coordinators
-            elements: []
+            viewModel: ListViewModel(api: JSONPlaceholderAPI())
         )
 
         // Use a UIHostingController as window root view controller.

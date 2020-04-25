@@ -1,16 +1,17 @@
 import SwiftUI
+import Combine
 
 extension ListView {
     struct Element: Identifiable {
         let id: Int
         let title: String
-        var thumbnail: Thumbnail
+        var thumbnail: Thumbnail?
         var isFavourite: Bool
         let albumID: Int
     }
     
     struct Thumbnail {
-        var image: UIImage?
+        var image: UIImage
         let size: CGSize
     }
 }

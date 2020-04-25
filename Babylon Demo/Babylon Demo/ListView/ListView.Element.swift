@@ -11,12 +11,20 @@ extension ListView {
     }
     
     struct Thumbnail {
-        var image: UIImage
-        let size: CGSize
+        let id: Int
+        let url: URL // TODO preferably this would not be exposed to the view
+        let image: UIImage?
+        let size: CGSize?
     }
 }
 
-extension ListView.Element: With {}
+extension ListView.Thumbnail: Equatable {}
+
+extension ListView.Thumbnail: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
 
 #if DEBUG
 extension ListView.Element {
@@ -25,6 +33,8 @@ extension ListView.Element {
             id: 47,
             title: "et soluta est",
             thumbnail: .init(
+                id: 47,
+                url: URL(string: "http://google.com")!,
                 image: UIImage(named: "thumbnail_mock")!,
                 size: CGSize(width: 150, height: 150)
             ),

@@ -18,7 +18,11 @@ struct ListView: View {
                                 api: JSONPlaceholderAPI()
                             )
                         )) {
-                            ListCell(element: self.viewModel.elements[index])
+                            ListCell(
+                                element: self.viewModel.elements[index],
+                                thumbnail: self.viewModel.thumbnails.first(where: { $0.id == self.viewModel.elements[index].id })
+                            )
+                                .onAppear(perform: { self.viewModel.onListCellAppear(index) })
                         }
                         .background(self.viewModel.elements[index].isFavourite ? Color.yellow : nil)
                     }
@@ -34,10 +38,11 @@ struct ListView: View {
 
 struct ListCell: View {
     let element: ListView.Element
+    let thumbnail: ListView.Thumbnail?
 
     var body: some View {
         HStack(spacing: 10) {
-            thumbnailOrFallback(for: element)
+            thumbnailOrFallback(for: thumbnail)
             Text(element.title)
             Spacer()
         }
@@ -45,14 +50,14 @@ struct ListCell: View {
 }
 
 extension ListCell {
-    private func thumbnailOrFallback(for element: ListView.Element) -> some View {
+    private func thumbnailOrFallback(for thumbnail: ListView.Thumbnail?) -> some View {
         Group {
-            if element.thumbnail?.image != nil {
-                Image(uiImage: element.thumbnail!.image) // I should use my own if-let replacement here
+            if thumbnail?.image != nil {
+                Image(uiImage: thumbnail!.image!) // I should use my own if-let replacement here
                     .resizable()
                     .frame(
-                        maxWidth: element.thumbnail!.size.width,
-                        maxHeight: element.thumbnail!.size.height
+                        maxWidth: thumbnail!.size!.width,
+                        maxHeight: thumbnail!.size!.height
                     )
                     .aspectRatio(contentMode: .fit)
             } else {
@@ -66,17 +71,8 @@ extension ListCell {
     }
 }
 
-extension ListView {
-    private func toggleFavourite(for element: Element) {
-        element.with { $0.isFavourite.toggle() }
-    }
-}
-
 struct ListView_Previews: PreviewProvider {
     static var previews: some View {
-        ListView(
-            viewModel: ListViewModel(api: APIFixture())
-        )
-//        (viewModel: .init(remote: <#T##Remoteable#>, url: <#T##URL#>) .constant([.fixture(isFavourite: true), .fixture(), .fixture()]))
+        ListView(viewModel: ListViewModel(api: APIFixture()))
     }
 }

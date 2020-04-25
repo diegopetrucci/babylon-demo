@@ -64,7 +64,7 @@ extension PhotoDetailView {
         Group {
             if viewModel.element.thumbnail?.image != nil {
                 // sigh…
-                Image(uiImage: viewModel.element.thumbnail!.image)
+                Image(uiImage: viewModel.element.thumbnail!.image!)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             } else {

@@ -4,31 +4,28 @@ import class SwiftUI.UIImage
 
 final class ListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
+    private let api: API
+    private var thumbnailURLs: [URL] = []
 
     @Published private(set) var elements: [ListView.Element] = []
-    @Published private(set) var thumbnails: [ListView.Thumbnail?] = []
+    @Published private(set) var thumbnails = Set<ListView.Thumbnail>()
 
     init(api: API) {
+        self.api = api
+
         api.photos()
             .replaceError(with: [])
             .map { photos in
                 photos.map { photo in
-//                     TODO this is a mess
-//                    let thumbnailPublisher: AnyPublisher<ListView.Thumbnail?, Never> = JSONPlaceholderAPI.thumbnail(for: photo.thumbnailURL)
-//                        .map { image -> ListView.Thumbnail? in
-//                            guard let image = image else { return nil }
-//
-//                            return ListView.Thumbnail(image: image, size: image.size)
-//                        }
-//                        .replaceError(with: nil)
-//                        .eraseToAnyPublisher()
-//                        .assign(to: \.thumbnails[0], on: self) // TODO lol
-//                        .store(in: &self.cancellables)
-
-                    return ListView.Element(
+                    ListView.Element(
                         id: photo.id,
                         title: photo.title,
-                        thumbnail: nil,
+                        thumbnail: ListView.Thumbnail(
+                            id: photo.id,
+                            url: photo.thumbnailURL,
+                            image: nil,
+                            size: nil
+                        ),
                         isFavourite: false,
                         albumID: photo.albumID
                     )
@@ -41,6 +38,38 @@ final class ListViewModel: ObservableObject {
 
     func onAppear() {
         // TODO
+    }
+
+    func onListCellAppear(_ index: Int) {
+        let element = self.elements[index]
+
+        // TODO it should not be an optional
+        guard let url = self.elements[index].thumbnail?.url else { return }
+
+        api.thumbnail(for: url)
+            .sink { image in
+                if let thumbnail = self.thumbnails.first(where: { $0.id == element.id }) {
+                    self.thumbnails.remove(thumbnail)
+                    self.thumbnails.insert(
+                        ListView.Thumbnail(
+                            id: element.id,
+                            url: url,
+                            image: image,
+                            size: image?.size
+                        )
+                    )
+                } else {
+                    self.thumbnails.insert(
+                        ListView.Thumbnail(
+                            id: element.id,
+                            url: url,
+                            image: image,
+                            size: image?.size
+                        )
+                    )
+                }
+        }
+        .store(in: &cancellables)
     }
 }
 

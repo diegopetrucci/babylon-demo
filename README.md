@@ -10,3 +10,4 @@ Babylon demo project in SwiftUI &amp; Combine
 * Favourites at the top
 * download thumbnails
 * set a max size for photos in detail view
+* thumbnails don't seem to update with the correct image if the photodetail view is entered while thumbnail is still loading

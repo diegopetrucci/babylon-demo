@@ -10,7 +10,7 @@ final class ListViewModel: ObservableObject {
     @Published private(set) var elements: [ListView.Element] = []
     @Published private(set) var thumbnails = Set<ListView.Thumbnail>()
 
-    init(api: API) {
+    init(api: API = JSONPlaceholderAPI()) {
         self.api = api
 
         api.photos()
@@ -46,7 +46,7 @@ final class ListViewModel: ObservableObject {
         // TODO it should not be an optional
         guard let url = self.elements[index].thumbnail?.url else { return }
 
-        api.thumbnail(for: url)
+        api.image(for: url)
             .sink { image in
                 if let thumbnail = self.thumbnails.first(where: { $0.id == element.id }) {
                     self.thumbnails.remove(thumbnail)

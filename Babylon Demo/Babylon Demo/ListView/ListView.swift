@@ -8,18 +8,22 @@ struct ListView: View {
             // TODO if let having downloaded photos
             if viewModel.elements.isNotEmpty() {
                 NavigationView {
+                    Section {
+                        List(viewModel.elements.filter { $0.isFavourite }.indices, id: \.self) { index in
+                            ListCell(
+                                title: self.viewModel.elements[index].title,
+                                thumbnail: self.viewModel.thumbnails.first(where: { $0.id == self.viewModel.elements[index].id })
+                            )
+                                .onAppear(perform: { self.viewModel.onListCellAppear(index) })
+                        }
+                    }
                     List(viewModel.elements.sorted(by: viewModel.isSortedByFavourites).indices, id: \.self) { index in
                         // TODO make it injected
                         NavigationLink(destination: PhotoDetailView(
-                            viewModel: PhotoDetailViewModel(
-                                element: self.viewModel.elements[index],
-                                albumID: self.viewModel.elements[index].albumID,
-                                photoID: self.viewModel.elements[index].id,
-                                api: JSONPlaceholderAPI()
-                            )
+                            viewModel: self.viewModel(for: self.viewModel.elements[index])
                         )) {
                             ListCell(
-                                element: self.viewModel.elements[index],
+                                title: self.viewModel.elements[index].title,
                                 thumbnail: self.viewModel.thumbnails.first(where: { $0.id == self.viewModel.elements[index].id })
                             )
                                 .onAppear(perform: { self.viewModel.onListCellAppear(index) })
@@ -36,14 +40,26 @@ struct ListView: View {
     }
 }
 
+extension ListView {
+    private func viewModel(for element: ListView.Element) -> PhotoDetailViewModel {
+        .init(
+            element: element,
+            albumID: element.albumID,
+            photoID: element.id,
+            photoURL: element.photoURL,
+            api: JSONPlaceholderAPI()
+        )
+    }
+}
+
 struct ListCell: View {
-    let element: ListView.Element
+    let title: String
     let thumbnail: ListView.Thumbnail?
 
     var body: some View {
         HStack(spacing: 10) {
             thumbnailOrFallback(for: thumbnail)
-            Text(element.title)
+            Text(title)
             Spacer()
         }
     }

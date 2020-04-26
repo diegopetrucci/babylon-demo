@@ -4,7 +4,7 @@ import class UIKit.UIImage
 
 protocol API {
     func photos() -> AnyPublisher<[Photo], RemoteError>
-    func thumbnail(for url: URL) -> AnyPublisher<UIImage?, Never>
+    func image(for url: URL) -> AnyPublisher<UIImage?, Never>
     func album(with albumID: Int) -> AnyPublisher<Album, RemoteError>
     func user(with userID: Int) -> AnyPublisher<User, RemoteError>
     func numberOfComments(for photoID: Int) -> AnyPublisher<Int, RemoteError>
@@ -20,7 +20,7 @@ extension JSONPlaceholderAPI: API {
         remote.load(from: baseURL.appendingPathComponent("photos"))
     }
 
-    func thumbnail(for url: URL) -> AnyPublisher<UIImage?, Never> {
+    func image(for url: URL) -> AnyPublisher<UIImage?, Never> {
         remote.loadData(from: url)
             .map(UIImage.init)
             .replaceError(with: nil)
@@ -48,7 +48,7 @@ struct APIFixture: API {
             .eraseToAnyPublisher()
     }
 
-    func thumbnail(for url: URL) -> AnyPublisher<UIImage?, Never> {
+    func image(for url: URL) -> AnyPublisher<UIImage?, Never> {
         Just<UIImage?>(UIImage(named: "thumbnail_fixture"))
             .setFailureType(to: Never.self)
             .eraseToAnyPublisher()

@@ -5,8 +5,9 @@ extension ListView {
     struct Element: Identifiable {
         let id: Int
         let title: String
-        var thumbnail: Thumbnail?
-        var isFavourite: Bool
+        let thumbnail: Thumbnail?
+        let photoURL: URL // TODO preferably this would not be exposed to the view
+        let isFavourite: Bool
         let albumID: Int
     }
     
@@ -38,6 +39,7 @@ extension ListView.Element {
                 image: UIImage(named: "thumbnail_mock")!,
                 size: CGSize(width: 150, height: 150)
             ),
+            photoURL: URL(string: "http://google.com")!,
             isFavourite: isFavourite, albumID: 1
         )
     }

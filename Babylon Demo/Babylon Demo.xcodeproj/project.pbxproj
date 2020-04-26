@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,8 @@
 		6C97C7022453616E007B5862 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C97C6FF2453616E007B5862 /* User.swift */; };
 		6C97C7032453616E007B5862 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C97C7002453616E007B5862 /* Photo.swift */; };
 		6C97C70624536185007B5862 /* Remote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C97C70524536185007B5862 /* Remote.swift */; };
+		6CA7ACCB2455FE32004EC6EE /* CombineFeedback in Frameworks */ = {isa = PBXBuildFile; productRef = 6CA7ACCA2455FE32004EC6EE /* CombineFeedback */; };
+		6CA7ACCD2455FE32004EC6EE /* CombineFeedbackUI in Frameworks */ = {isa = PBXBuildFile; productRef = 6CA7ACCC2455FE32004EC6EE /* CombineFeedbackUI */; };
 		6CB3161024007B4E002A644C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3160F24007B4E002A644C /* AppDelegate.swift */; };
 		6CB3161224007B4E002A644C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3161124007B4E002A644C /* SceneDelegate.swift */; };
 		6CB3161624007B50002A644C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CB3161524007B50002A644C /* Assets.xcassets */; };
@@ -78,6 +80,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CA7ACCB2455FE32004EC6EE /* CombineFeedback in Frameworks */,
+				6CA7ACCD2455FE32004EC6EE /* CombineFeedbackUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,6 +229,10 @@
 			dependencies = (
 			);
 			name = "Babylon Demo";
+			packageProductDependencies = (
+				6CA7ACCA2455FE32004EC6EE /* CombineFeedback */,
+				6CA7ACCC2455FE32004EC6EE /* CombineFeedbackUI */,
+			);
 			productName = "Babylon Demo";
 			productReference = 6CB3160C24007B4E002A644C /* Babylon Demo.app */;
 			productType = "com.apple.product-type.application";
@@ -297,6 +305,9 @@
 				Base,
 			);
 			mainGroup = 6CB3160324007B4E002A644C;
+			packageReferences = (
+				6CA7ACC92455FE32004EC6EE /* XCRemoteSwiftPackageReference "CombineFeedback" */,
+			);
 			productRefGroup = 6CB3160D24007B4E002A644C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -674,6 +685,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6CA7ACC92455FE32004EC6EE /* XCRemoteSwiftPackageReference "CombineFeedback" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:sergdort/CombineFeedback.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.7.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6CA7ACCA2455FE32004EC6EE /* CombineFeedback */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6CA7ACC92455FE32004EC6EE /* XCRemoteSwiftPackageReference "CombineFeedback" */;
+			productName = CombineFeedback;
+		};
+		6CA7ACCC2455FE32004EC6EE /* CombineFeedbackUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6CA7ACC92455FE32004EC6EE /* XCRemoteSwiftPackageReference "CombineFeedback" */;
+			productName = CombineFeedbackUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6CB3160424007B4E002A644C /* Project object */;
 }

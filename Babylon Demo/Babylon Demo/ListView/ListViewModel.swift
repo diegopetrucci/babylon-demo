@@ -26,6 +26,7 @@ final class ListViewModel: ObservableObject {
                             image: nil,
                             size: nil
                         ),
+                        photoURL: photo.url,
                         isFavourite: false,
                         albumID: photo.albumID
                     )

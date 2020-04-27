@@ -55,6 +55,8 @@ extension PhotoDetailViewModel {
     static func reduce(_ state: State, _ event: Event) -> State {
         switch event {
         case let .loaded(image, author, numberOfComments):
+            guard let image = image else { return state.with { $0.status = .noImageLoaded } }
+
             return state.with {
                 $0.status = .loaded
                 $0.image = image
@@ -88,7 +90,7 @@ extension PhotoDetailViewModel {
         api: API
     ) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
-            guard case .idle = state.status else { return Empty().eraseToAnyPublisher() }
+            guard case .loading = state.status else { return Empty().eraseToAnyPublisher() }
 
             let imagePublisher = (imageURL != nil)
                 ? api.image(for: imageURL!) // TODO sigh…
@@ -126,6 +128,7 @@ extension PhotoDetailViewModel {
 extension PhotoDetailViewModel {
     struct State: Then {
         var status: Status
+
         var title: String
         var image: UIImage?
         var author: String?

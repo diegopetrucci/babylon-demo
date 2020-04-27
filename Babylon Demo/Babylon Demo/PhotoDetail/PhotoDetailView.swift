@@ -4,10 +4,21 @@ struct PhotoDetailView: View {
     @ObservedObject var viewModel: PhotoDetailViewModel
     
     var body: some View {
-        VStack(spacing: 10) {
-            photo()
-            commentsView()
-        }.onAppear { self.viewModel.send(event: .onAppear) }
+        Group {
+            if viewModel.state.status == .loading {
+                Text("Loading information, please wait…")
+            } else {
+                if viewModel.state.image != nil {
+                    VStack(spacing: 10) {
+                        photo()
+                        commentsView()
+                    }
+                } else {
+                    Text("There was an error loading the image.") // TODO this appears when not loaded yet
+                }
+            }
+        }
+        .onAppear { self.viewModel.send(event: .onAppear) }
     }
 }
 
@@ -16,23 +27,13 @@ extension PhotoDetailView {
     private func photo() -> some View {
         ZStack(alignment: .bottom) {
             ZStack(alignment: .top) {
-                Group {
-                    // TODO if no image is loaded it does not really make sense
-                    // to show title/author/comments either, so this logic should change
-                    if viewModel.state.image != nil {
-                        // sigh…
-                        Image(uiImage: viewModel.state.image!)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    } else {
-                        Rectangle()
-                            .foregroundColor(Color.green)
-                            .frame(
-                                width: viewModel.state.image?.size.width ?? UIScreen.main.bounds.width,
-                                height: viewModel.state.image?.size.height ?? 400
-                        )
-                            .aspectRatio(contentMode: .fit)
-                    }
+                // TODO if no image is loaded it does not really make sense
+                // to show title/author/comments either, so this logic should change
+                if viewModel.state.image != nil {
+                    // sigh…
+                    Image(uiImage: viewModel.state.image!)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
                 }
                 HStack {
                     Text(viewModel.state.title)

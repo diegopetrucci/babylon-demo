@@ -5,16 +5,17 @@ struct PhotoDetailView: View {
     
     var body: some View {
         Group {
+            // It's a shame SwiftUI does not support `switch`es yet.
             if viewModel.state.status == .loading {
                 Text("Loading information, please wait…")
-            } else {
+            } else if viewModel.state.status == .loaded {
                 if viewModel.state.image != nil {
                     VStack(spacing: 10) {
                         photo()
                         commentsView()
                     }
-                } else {
-                    Text("There was an error loading the image.") // TODO this appears when not loaded yet
+                } else if viewModel.state.status == .notLoaded {
+                    Text("There was an error loading the image.")
                 }
             }
         }

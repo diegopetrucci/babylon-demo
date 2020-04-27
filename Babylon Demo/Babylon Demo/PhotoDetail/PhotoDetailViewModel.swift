@@ -17,7 +17,7 @@ final class PhotoDetailViewModel: ObservableObject {
         api: API = JSONPlaceholderAPI()
     ) {
         let initialState = State(
-            status: .idle,
+            status: .loading,
             title: element.title,
             image: nil,
             author: nil,
@@ -55,7 +55,7 @@ extension PhotoDetailViewModel {
     static func reduce(_ state: State, _ event: Event) -> State {
         switch event {
         case let .loaded(image, author, numberOfComments):
-            guard let image = image else { return state.with { $0.status = .noImageLoaded } }
+            guard let image = image else { return state.with { $0.status = .notLoaded } }
 
             return state.with {
                 $0.status = .loaded
@@ -137,10 +137,9 @@ extension PhotoDetailViewModel {
     }
 
     enum Status {
-        case idle
         case loading
         case loaded
-        case noImageLoaded
+        case notLoaded
     }
 
     enum Event {

@@ -7,7 +7,7 @@ struct PhotoDetailView: View {
         VStack(spacing: 10) {
             photo()
             commentsView()
-        }.onAppear { self.viewModel.onAppear() }
+        }.onAppear { self.viewModel.send(event: .onAppear) }
     }
 }
 
@@ -17,35 +17,37 @@ extension PhotoDetailView {
         ZStack(alignment: .bottom) {
             ZStack(alignment: .top) {
                 Group {
-                    if viewModel.image != nil {
+                    // TODO if no image is loaded it does not really make sense
+                    // to show title/author/comments either, so this logic should change
+                    if viewModel.state.image != nil {
                         // sigh…
-                        Image(uiImage: viewModel.image!)
+                        Image(uiImage: viewModel.state.image!)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                     } else {
                         Rectangle()
                             .foregroundColor(Color.green)
                             .frame(
-                                width: viewModel.image?.size.width ?? UIScreen.main.bounds.width,
-                                height: viewModel.image?.size.height ?? 400
+                                width: viewModel.state.image?.size.width ?? UIScreen.main.bounds.width,
+                                height: viewModel.state.image?.size.height ?? 400
                         )
                             .aspectRatio(contentMode: .fit)
                     }
                 }
                 HStack {
-                    Text(viewModel.element.title)
+                    Text(viewModel.state.title)
                         .foregroundColor(Color.white)
                         .font(.title)
                     Spacer()
                     Button(
-                        action: { self.viewModel.hasTappedFavouriteButton() },
-                        label: { Text(self.viewModel.element.isFavourite ? "★" : "☆"
+                        action: { self.viewModel.send(event: .tappedFavouriteButton) },
+                        label: { Text(self.viewModel.state.isFavourite ? "★" : "☆"
                     )
                     .font(.largeTitle) }).padding()
                 }
                 .padding()
             }
-            authorView(name: viewModel.author)
+            authorView(name: viewModel.state.author)
         }
     }
 
@@ -63,9 +65,9 @@ extension PhotoDetailView {
     
     private func commentsView() -> some View {
         Group {
-            if viewModel.numberOfComments != nil {
+            if viewModel.state.numberOfComments != nil {
                 HStack {
-                    Text("Number of comments: \(viewModel.numberOfComments!)") // Sigh…
+                    Text("Number of comments: \(viewModel.state.numberOfComments!)") // Sigh…
                         .padding()
                     Spacer()
                 }

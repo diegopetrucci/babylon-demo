@@ -16,19 +16,14 @@ final class PhotoDetailViewModel: ObservableObject {
         photoURL: URL,
         api: API = JSONPlaceholderAPI()
     ) {
-        let initialState = State(
+        state = State(
             status: .loading,
             title: element.title,
-            image: nil,
-            author: nil,
-            numberOfComments: nil,
             isFavourite: element.isFavourite
         )
 
-        state = initialState
-
         Publishers.system(
-            initial: initialState,
+            initial: state,
             reduce: Self.reduce,
             scheduler: RunLoop.main,
             feedbacks: [
@@ -58,10 +53,13 @@ extension PhotoDetailViewModel {
             guard let image = image else { return state.with { $0.status = .notLoaded } }
 
             return state.with {
-                $0.status = .loaded
-                $0.image = image
-                $0.author = author
-                $0.numberOfComments = numberOfComments
+                $0.status = .loaded(
+                    title: state.title,
+                    image: image,
+                    author: author,
+                    numberOfComments: numberOfComments,
+                    isFavourite: state.isFavourite
+                )
             }
         case let .ui(ui):
             switch ui {
@@ -129,16 +127,22 @@ extension PhotoDetailViewModel {
     struct State: Then {
         var status: Status
 
-        var title: String
-        var image: UIImage?
-        var author: String?
-        var numberOfComments: String?
-        var isFavourite: Bool // TODO write to storage
+        // This is a temporary workaround for SwiftUI not having
+        // `switch`es or `if-let`s
+        var props: (String, UIImage, String?, String?, Bool) {
+            guard case let .loaded(title, image, author, numberOfComments, isFavourite) = status
+            else { return ("", UIImage(named: "thumbnail_fixture")!, nil, nil, false) }
+
+            return (title, image, author, numberOfComments, isFavourite)
+        }
+
+        fileprivate var title: String
+        fileprivate var isFavourite: Bool // TODO write to storage
     }
 
-    enum Status {
+    enum Status: Equatable {
         case loading
-        case loaded
+        case loaded(title: String, image: UIImage, author: String?, numberOfComments: String?, isFavourite: Bool)
         case notLoaded
     }
 

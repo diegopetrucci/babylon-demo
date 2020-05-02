@@ -4,52 +4,63 @@ struct PhotoDetailView: View {
     @ObservedObject var viewModel: PhotoDetailViewModel
     
     var body: some View {
-        Group {
-            // It's a shame SwiftUI does not support `switch`es yet.
-            if viewModel.state.status == .loading {
-                Text("Loading information, please wait…")
-            } else if viewModel.state.status == .loaded {
-                if viewModel.state.image != nil {
-                    VStack(spacing: 10) {
-                        photo()
-                        commentsView()
-                    }
-                } else if viewModel.state.status == .notLoaded {
-                    Text("There was an error loading the image.")
-                }
-            }
+        render(state: viewModel.state)
+            .onAppear { self.viewModel.send(event: .onAppear) }
+    }
+}
+
+extension PhotoDetailView {
+    private func render(state: PhotoDetailViewModel.State) -> some View {
+        // TODO: is it possible to remove the wrapping into `AnyView`s?
+        if state.status == .loading {
+            return AnyView(Text("Loading information, please wait…"))
+        } else if state.status == .notLoaded {
+            // TODO add retry button
+            return AnyView(Text("There was an error loading the image. Please go back and try again."))
+        } else {
+            // Ideally I would have a `switch` here, or at the very least an `if-let`
+            // but at the moment SwiftUI does not support neither
+            // e.g:
+            // case let .loaded(title, image, author, numberOfComments, isFavourite)
+            // So I had to resort to exposing these computed in the VM
+            return AnyView(VStack(spacing: 10) {
+                photo(with: state.props.0, state.props.1, state.props.2, state.props.3, state.props.4)
+                commentsView(numberOfComments: state.props.3)
+            })
         }
-        .onAppear { self.viewModel.send(event: .onAppear) }
     }
 }
 
 // TODO This view needs to be broken up, it's unreadable
 extension PhotoDetailView {
-    private func photo() -> some View {
+    private func photo(
+        with title: String,
+        _ image: UIImage,
+        _ author: String?,
+        _ numberOfComments: String?,
+        _ isFavourite: Bool
+        ) -> some View {
         ZStack(alignment: .bottom) {
             ZStack(alignment: .top) {
-                // TODO if no image is loaded it does not really make sense
-                // to show title/author/comments either, so this logic should change
-                if viewModel.state.image != nil {
-                    // sigh…
-                    Image(uiImage: viewModel.state.image!)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                }
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                 HStack {
-                    Text(viewModel.state.title)
+                    Text(title)
                         .foregroundColor(Color.white)
                         .font(.title)
                     Spacer()
                     Button(
                         action: { self.viewModel.send(event: .tappedFavouriteButton) },
-                        label: { Text(self.viewModel.state.isFavourite ? "★" : "☆"
+                        label: { Text(isFavourite ? "★" : "☆"
                     )
                     .font(.largeTitle) }).padding()
                 }
                 .padding()
             }
-            authorView(name: viewModel.state.author)
+            if author != nil {
+                 authorView(name: author!) // TODO sigh…
+            }
         }
     }
 
@@ -65,11 +76,11 @@ extension PhotoDetailView {
         }
     }
     
-    private func commentsView() -> some View {
+    private func commentsView(numberOfComments: String?) -> some View {
         Group {
-            if viewModel.state.numberOfComments != nil {
+            if numberOfComments != nil {
                 HStack {
-                    Text("Number of comments: \(viewModel.state.numberOfComments!)") // Sigh…
+                    Text("Number of comments: \(numberOfComments!)") // Sigh…
                         .padding()
                     Spacer()
                 }

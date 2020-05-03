@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-// This is lifted from Vadym Bulavin's moder MVVM
+// This is lifted from Vadym Bulavin's modern MVVM
 // with SwiftUI architecture post.
 struct Feedback<State, Event> {
     let run: (AnyPublisher<State, Never>) -> AnyPublisher<Event, Never>

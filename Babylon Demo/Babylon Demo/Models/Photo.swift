@@ -24,8 +24,8 @@ extension Photo {
         .init(
             id: id,
             title: "et soluta est",
-            url: URL(string: "http://google.com")!,
-            thumbnailURL: URL(string: "http://google.com")!,
+            url: .fixture(),
+            thumbnailURL: .fixture(),
             albumID: albumID
         )
     }

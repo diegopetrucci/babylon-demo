@@ -9,6 +9,35 @@ final class PhotoDetailViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let input = PassthroughSubject<Event.UI, Never>()
 
+    #if DEBUG
+    init(
+        state: State,
+        element: ListView.Element,
+        albumID: Int,
+        photoID: Int,
+        photoURL: URL,
+        api: API = JSONPlaceholderAPI()
+    ) {
+        self.state = state
+
+        Publishers.system(
+            initial: state,
+            reduce: Self.reduce,
+            scheduler: RunLoop.main,
+            feedbacks: [
+                Self.userInput(input: input.eraseToAnyPublisher()),
+                Self.whenLoading(
+                    imageURL: element.thumbnail?.url,
+                    albumID: albumID,
+                    photoID: photoID,
+                    api: api)
+            ]
+        )
+            .assign(to: \.state, on: self)
+            .store(in: &cancellables)
+    }
+    #endif
+
     init(
         element: ListView.Element,
         albumID: Int,
@@ -156,3 +185,28 @@ extension PhotoDetailViewModel {
         }
     }
 }
+
+#if DEBUG
+extension PhotoDetailViewModel {
+    static func fixture() -> Self {
+        .init(
+            state: .init(
+                status: PhotoDetailViewModel.Status.loaded(
+                    title: "The title of the photo is great",
+                    image: .fixture(),
+                    author: "Napoleone Bonaparte",
+                    numberOfComments: "11",
+                    isFavourite: true
+                ),
+                title: "The title of the photo is great",
+                isFavourite: true
+            ),
+            element: .fixture(),
+            albumID: 1,
+            photoID: 2,
+            photoURL: .fixture(),
+            api: APIFixture()
+        )
+    }
+}
+#endif

@@ -7,12 +7,28 @@ final class ListViewModel: ObservableObject {
     @Published private(set) var state: State
 
     private var cancellables = Set<AnyCancellable>()
-    private let api: API // TODO remove
     private var input = PassthroughSubject<Event.UI, Never>()
 
-    init(api: API = JSONPlaceholderAPI()) {
-        self.api = api // TODO remove
+    #if DEBUG
+    init(state: State, api: API = JSONPlaceholderAPI()) {
+        self.state = state
 
+        Publishers.system(
+            initial: state,
+            reduce: Self.reduce,
+            scheduler: RunLoop.main,
+            feedbacks: [
+                Self.userInput(input.eraseToAnyPublisher()),
+                Self.whenLoadingMetadata(api: api),
+                Self.whenLoadingThumbnail(api: api)
+            ]
+        )
+            .assign(to: \.state, on: self)
+            .store(in: &cancellables)
+    }
+    #endif
+
+    init(api: API = JSONPlaceholderAPI()) {
         state = .init(status: .loading)
 
         Publishers.system(
@@ -73,12 +89,9 @@ extension ListViewModel {
                 state.status = .loaded
             }
         case let .ui(.onListCellAppear(index)):
-//             TODO: a guard that does not download them again if already present
-            guard case .loaded = state.status else { return state } // the poor's man lock
-
-//            // This is to avoid having multiple cells shown at the same time
-//            // to trigger this
-//            guard case .loaded = state.status else { return state }
+            // This is to avoid having multiple cells shown at the same time
+            // to trigger this. The poor's man lock.
+            guard case .loaded = state.status else { return state }
 
             return state.with {
 //                // A better solution would be for the API to be
@@ -94,9 +107,6 @@ extension ListViewModel {
                     urls: next9URLs
                 )
             }
-        case .ui(.onAppear):
-            // TODO
-            return state
         }
     }
 }
@@ -171,7 +181,6 @@ extension ListViewModel {
         case ui(UI)
 
         enum UI {
-            case onAppear
             case onListCellAppear(_ index: Int)
         }
     }
@@ -205,3 +214,17 @@ private func element(from photo: Photo) -> ListView.Element {
         albumID: photo.albumID
     )
 }
+
+#if DEBUG
+extension ListViewModel {
+    static func fixture() -> ListViewModel {
+        .init(
+            state: .init(
+                status: .loaded,
+                elements: [.fixture(isFavourite: true), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture()]
+            ),
+            api: APIFixture()
+        )
+    }
+}
+#endif

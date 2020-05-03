@@ -27,15 +27,6 @@ extension JSONPlaceholderAPI: API {
             .eraseToAnyPublisher()
     }
 
-//    func images(for urls: [URL]) -> AnyPublisher<[UIImage?], Never> {
-//        urls.map { url in
-//            remote.loadData(from: url)
-//            .map(UIImage.init)
-//            .replaceError(with: nil)
-//            .eraseToAnyPublisher()
-//        }
-//    }
-
     func album(with albumID: Int) -> AnyPublisher<Album, RemoteError> {
         remote.load(from: baseURL.appendingPathComponent("albums/\(albumID)"))
     }

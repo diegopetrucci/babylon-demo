@@ -37,7 +37,6 @@ struct ListView: View {
                 Text("Data has not loaded yet")
             }
         }
-        .onAppear { self.viewModel.send(.onAppear) }
     }
 }
 
@@ -90,6 +89,6 @@ extension ListCell {
 
 struct ListView_Previews: PreviewProvider {
     static var previews: some View {
-        ListView(viewModel: ListViewModel(api: APIFixture()))
+        ListView(viewModel: .fixture())
     }
 }

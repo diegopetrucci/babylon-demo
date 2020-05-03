@@ -116,14 +116,6 @@ extension PhotoDetailView {
 
 struct PhotoDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        PhotoDetailView(
-            viewModel: PhotoDetailViewModel( // TODO make a fixture
-                element: .fixture(),
-                albumID: 1,
-                photoID: 2,
-                photoURL: URL(string: "http://google.com")!,
-                api: APIFixture()
-            )
-        )
+        PhotoDetailView(viewModel: .fixture())
     }
 }

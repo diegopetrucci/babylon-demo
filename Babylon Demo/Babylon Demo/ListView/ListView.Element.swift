@@ -33,14 +33,27 @@ extension ListView.Element {
         .init(
             id: 47,
             title: "et soluta est",
-            thumbnailURL: URL(string: "http://google.com")!,
+            thumbnailURL: .fixture(),
             thumbnail: .init(
-                id: 47,
-                url: URL(string: "http://google.com")!,
-                image: UIImage(named: "thumbnail_mock")!,
+                id: 2,
+                url: .fixture(),
+                image: .fixture(),
                 size: CGSize(width: 150, height: 150)
             ),
             isFavourite: isFavourite, albumID: 1
+        )
+    }
+}
+#endif
+
+#if DEBUG
+extension ListView.Thumbnail {
+    static func fixture() -> ListView.Thumbnail {
+        .init(
+            id: 2,
+            url: .fixture(),
+            image: .fixture(),
+            size: .fixture()
         )
     }
 }

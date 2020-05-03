@@ -29,7 +29,7 @@ final class PhotoDetailViewModel: ObservableObject {
             feedbacks: [
                 Self.userInput(input: input.eraseToAnyPublisher()),
                 Self.whenLoading(
-                    imageURL: element.photoURL,
+                    imageURL: element.thumbnail?.url,
                     albumID: albumID,
                     photoID: photoID,
                     api: api)
@@ -47,7 +47,7 @@ extension PhotoDetailViewModel {
 }
 
 extension PhotoDetailViewModel {
-    static func reduce(_ state: State, _ event: Event) -> State {
+    private static func reduce(_ state: State, _ event: Event) -> State {
         switch event {
         case let .loaded(image, author, numberOfComments):
             guard let image = image else { return state.with { $0.status = .notLoaded } }
@@ -73,15 +73,15 @@ extension PhotoDetailViewModel {
 }
 
 extension PhotoDetailViewModel {
-    static func userInput(input: AnyPublisher<Event.UI, Never>) -> Feedback<State, Event> {
+    private static func userInput(input: AnyPublisher<Event.UI, Never>) -> Feedback<State, Event> {
         Feedback(run: { _ in
-            return input
+            input
                 .map(Event.ui)
                 .eraseToAnyPublisher()
         })
     }
 
-    static func whenLoading(
+    private static func whenLoading(
         imageURL: URL?,
         albumID: Int,
         photoID: Int,

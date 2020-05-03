@@ -5,8 +5,8 @@ extension ListView {
     struct Element: Identifiable {
         let id: Int
         let title: String
+        let thumbnailURL: URL // TODO remove
         let thumbnail: Thumbnail?
-        let photoURL: URL // TODO preferably this would not be exposed to the view
         let isFavourite: Bool
         let albumID: Int
     }
@@ -33,13 +33,13 @@ extension ListView.Element {
         .init(
             id: 47,
             title: "et soluta est",
+            thumbnailURL: URL(string: "http://google.com")!,
             thumbnail: .init(
                 id: 47,
                 url: URL(string: "http://google.com")!,
                 image: UIImage(named: "thumbnail_mock")!,
                 size: CGSize(width: 150, height: 150)
             ),
-            photoURL: URL(string: "http://google.com")!,
             isFavourite: isFavourite, albumID: 1
         )
     }

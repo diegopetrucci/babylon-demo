@@ -6,29 +6,30 @@ struct ListView: View {
     var body: some View {
         Group {
             // TODO if let having downloaded photos
-            if viewModel.elements.isNotEmpty() {
+            if viewModel.state.elements.isNotEmpty() {
                 NavigationView {
                     Section {
-                        List(viewModel.elements.filter { $0.isFavourite }.indices, id: \.self) { index in
+                        List(viewModel.state.elements.filter { $0.isFavourite }.indices, id: \.self) { index in
                             ListCell(
-                                title: self.viewModel.elements[index].title,
-                                thumbnail: self.viewModel.thumbnails.first(where: { $0.id == self.viewModel.elements[index].id })
+                                title: self.viewModel.state.elements[index].title,
+                                thumbnail: self.viewModel.state.thumbnails.first(where: { $0.id == self.viewModel.state.elements[index].id })
                             )
-                                .onAppear(perform: { self.viewModel.onListCellAppear(index) })
+                                .onAppear(perform: { self.viewModel.send(.onListCellAppear(index)) })
                         }
                     }
-                    List(viewModel.elements.sorted(by: viewModel.isSortedByFavourites).indices, id: \.self) { index in
+                    // TODO the VM should sort them already
+                    List(viewModel.state.elements.sorted(by: ListViewModel.isSortedByFavourites).indices, id: \.self) { index in
                         // TODO make it injected
                         NavigationLink(destination: PhotoDetailView(
-                            viewModel: self.viewModel(for: self.viewModel.elements[index])
+                            viewModel: self.viewModel(for: self.viewModel.state.elements[index])
                         )) {
                             ListCell(
-                                title: self.viewModel.elements[index].title,
-                                thumbnail: self.viewModel.thumbnails.first(where: { $0.id == self.viewModel.elements[index].id })
+                                title: self.viewModel.state.elements[index].title,
+                                thumbnail: self.viewModel.state.thumbnails.first(where: { $0.id == self.viewModel.state.elements[index].id })
                             )
-                                .onAppear(perform: { self.viewModel.onListCellAppear(index) })
+                                .onAppear(perform: { self.viewModel.send(.onListCellAppear(index)) })
                         }
-                        .background(self.viewModel.elements[index].isFavourite ? Color.yellow : nil)
+                        .background(self.viewModel.state.elements[index].isFavourite ? Color.yellow : nil)
                     }
                     .navigationBarTitle("Photos")
                 }
@@ -36,7 +37,7 @@ struct ListView: View {
                 Text("Data has not loaded yet")
             }
         }
-        .onAppear { self.viewModel.onAppear() }
+        .onAppear { self.viewModel.send(.onAppear) }
     }
 }
 
@@ -46,7 +47,7 @@ extension ListView {
             element: element,
             albumID: element.albumID,
             photoID: element.id,
-            photoURL: element.photoURL,
+            photoURL: element.thumbnailURL,
             api: JSONPlaceholderAPI()
         )
     }

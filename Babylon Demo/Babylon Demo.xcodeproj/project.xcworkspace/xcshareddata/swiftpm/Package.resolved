@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Then",
+        "repositoryURL": "git@github.com:devxoul/Then.git",
+        "state": {
+          "branch": null,
+          "revision": "6792b283705e65385a203ed5793fa269bc1221bf",
+          "version": "2.6.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

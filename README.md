@@ -11,3 +11,4 @@ Babylon demo project in SwiftUI &amp; Combine
 * download thumbnails
 * set a max size for photos in detail view
 * thumbnails don't seem to update with the correct image if the photodetail view is entered while thumbnail is still loading
+* add a way to mock the state in VMs otherwise they all start with the initial status, making the preview useless

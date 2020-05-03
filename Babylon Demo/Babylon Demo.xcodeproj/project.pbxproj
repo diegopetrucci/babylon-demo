@@ -18,8 +18,6 @@
 		6C97C7022453616E007B5862 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C97C6FF2453616E007B5862 /* User.swift */; };
 		6C97C7032453616E007B5862 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C97C7002453616E007B5862 /* Photo.swift */; };
 		6C97C70624536185007B5862 /* Remote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C97C70524536185007B5862 /* Remote.swift */; };
-		6CA7ACCB2455FE32004EC6EE /* CombineFeedback in Frameworks */ = {isa = PBXBuildFile; productRef = 6CA7ACCA2455FE32004EC6EE /* CombineFeedback */; };
-		6CA7ACCD2455FE32004EC6EE /* CombineFeedbackUI in Frameworks */ = {isa = PBXBuildFile; productRef = 6CA7ACCC2455FE32004EC6EE /* CombineFeedbackUI */; };
 		6CA7ACD0245601EA004EC6EE /* Publishers+System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA7ACCF245601EA004EC6EE /* Publishers+System.swift */; };
 		6CA7ACD2245604DA004EC6EE /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA7ACD1245604DA004EC6EE /* Feedback.swift */; };
 		6CB3161024007B4E002A644C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3160F24007B4E002A644C /* AppDelegate.swift */; };
@@ -91,9 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6CA7ACCB2455FE32004EC6EE /* CombineFeedback in Frameworks */,
 				6CFD09AB245768D300C1A3CE /* Then in Frameworks */,
-				6CA7ACCD2455FE32004EC6EE /* CombineFeedbackUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,8 +259,6 @@
 			);
 			name = "Babylon Demo";
 			packageProductDependencies = (
-				6CA7ACCA2455FE32004EC6EE /* CombineFeedback */,
-				6CA7ACCC2455FE32004EC6EE /* CombineFeedbackUI */,
 				6CFD09AA245768D300C1A3CE /* Then */,
 			);
 			productName = "Babylon Demo";
@@ -340,7 +334,6 @@
 			);
 			mainGroup = 6CB3160324007B4E002A644C;
 			packageReferences = (
-				6CA7ACC92455FE32004EC6EE /* XCRemoteSwiftPackageReference "CombineFeedback" */,
 				6CFD09A9245768D300C1A3CE /* XCRemoteSwiftPackageReference "Then" */,
 			);
 			productRefGroup = 6CB3160D24007B4E002A644C /* Products */;
@@ -727,14 +720,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		6CA7ACC92455FE32004EC6EE /* XCRemoteSwiftPackageReference "CombineFeedback" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:sergdort/CombineFeedback.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.7.0;
-			};
-		};
 		6CFD09A9245768D300C1A3CE /* XCRemoteSwiftPackageReference "Then" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:devxoul/Then.git";
@@ -746,16 +731,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6CA7ACCA2455FE32004EC6EE /* CombineFeedback */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6CA7ACC92455FE32004EC6EE /* XCRemoteSwiftPackageReference "CombineFeedback" */;
-			productName = CombineFeedback;
-		};
-		6CA7ACCC2455FE32004EC6EE /* CombineFeedbackUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6CA7ACC92455FE32004EC6EE /* XCRemoteSwiftPackageReference "CombineFeedback" */;
-			productName = CombineFeedbackUI;
-		};
 		6CFD09AA245768D300C1A3CE /* Then */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 6CFD09A9245768D300C1A3CE /* XCRemoteSwiftPackageReference "Then" */;

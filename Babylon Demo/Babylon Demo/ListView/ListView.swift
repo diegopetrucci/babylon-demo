@@ -13,14 +13,11 @@ struct ListView: View {
                             ListCell(
                                 image: DownloadableImageView(
                                     viewModel: DownloadableImageViewModel( // TODO this should be injected
-                                        url: self.viewModel.state.elements[index].thumbnailURL,
-                                        preferredWidth: 150,
-                                        preferredHeight: 150
+                                        url: self.viewModel.state.elements[index].thumbnailURL
                                     )
                                 ),
                                 title: self.viewModel.state.elements[index].title
                             )
-                                .onAppear(perform: { self.viewModel.send(.onListCellAppear(index)) })
                         }
                     }
                     // TODO the VM should sort them already

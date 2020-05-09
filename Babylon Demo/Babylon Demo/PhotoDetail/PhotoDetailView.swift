@@ -24,8 +24,8 @@ extension PhotoDetailView {
             // case let .loaded(title, image, author, numberOfComments, isFavourite)
             // So I had to resort to exposing these computed in the VM
             return AnyView(VStack(spacing: 10) {
-                photo(with: state.props.0, state.props.1, state.props.2, state.props.3, state.props.4)
-                commentsView(numberOfComments: state.props.3)
+                photo(with: state.props.0, state.photoURL, state.props.1, state.props.2, state.props.3)
+                commentsView(numberOfComments: state.props.2)
             })
         }
     }
@@ -35,16 +35,14 @@ extension PhotoDetailView {
 extension PhotoDetailView {
     private func photo(
         with title: String,
-        _ image: UIImage,
+        _ photoURL: URL,
         _ author: String?,
         _ numberOfComments: String?,
         _ isFavourite: Bool
-        ) -> some View {
+    ) -> some View {
         ZStack(alignment: .bottom) {
             ZStack(alignment: .top) {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                DownloadableImageView(viewModel: .init(url: photoURL))
                 HStack {
                     Text(title)
                         .foregroundColor(Color.white)
@@ -89,30 +87,6 @@ extension PhotoDetailView {
         }
     }
 }
-
-// This does not work, as it does not propagate
-// the changes of self.image :/
-
-//extension PhotoDetailView {
-//    private func imageOrFallback() -> some View {
-//        Group {
-//            if viewModel.image != nil {
-//                // sigh…
-//                Image(uiImage: viewModel.image!)
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fit)
-//            } else {
-//                Rectangle()
-//                    .foregroundColor(Color.green)
-//                    .frame(
-//                        width: viewModel.image?.size.width ?? UIScreen.main.bounds.width,
-//                        height: viewModel.image?.size.height ?? 400
-//                )
-//                    .aspectRatio(contentMode: .fit)
-//            }
-//        }
-//    }
-//}
 
 struct PhotoDetailView_Previews: PreviewProvider {
     static var previews: some View {

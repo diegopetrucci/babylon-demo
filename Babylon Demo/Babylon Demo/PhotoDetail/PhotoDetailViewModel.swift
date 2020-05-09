@@ -27,7 +27,6 @@ final class PhotoDetailViewModel: ObservableObject {
             feedbacks: [
                 Self.userInput(input: input.eraseToAnyPublisher()),
                 Self.whenLoading(
-                    imageURL: element.thumbnail?.url,
                     albumID: albumID,
                     photoID: photoID,
                     api: api)
@@ -46,7 +45,8 @@ final class PhotoDetailViewModel: ObservableObject {
         api: API = JSONPlaceholderAPI()
     ) {
         state = State(
-            status: .loading,
+            status: .idle,
+            photoURL: photoURL,
             title: element.title,
             isFavourite: element.isFavourite
         )
@@ -58,7 +58,6 @@ final class PhotoDetailViewModel: ObservableObject {
             feedbacks: [
                 Self.userInput(input: input.eraseToAnyPublisher()),
                 Self.whenLoading(
-                    imageURL: element.thumbnail?.url,
                     albumID: albumID,
                     photoID: photoID,
                     api: api)
@@ -78,13 +77,10 @@ extension PhotoDetailViewModel {
 extension PhotoDetailViewModel {
     private static func reduce(_ state: State, _ event: Event) -> State {
         switch event {
-        case let .loaded(image, author, numberOfComments):
-            guard let image = image else { return state.with { $0.status = .notLoaded } }
-
+        case let .loaded(author, numberOfComments):
             return state.with {
                 $0.status = .loaded(
                     title: state.title,
-                    image: image,
                     author: author,
                     numberOfComments: numberOfComments,
                     isFavourite: state.isFavourite
@@ -93,6 +89,9 @@ extension PhotoDetailViewModel {
         case let .ui(ui):
             switch ui {
             case .onAppear:
+                // We want to avoid unnecessarily double-reloading
+                if case .loaded = state.status { return state }
+
                 return state.with { $0.status = .loading }
             case .tappedFavouriteButton:
                 return state.with { $0.isFavourite.toggle() } // TODO does this work?
@@ -111,21 +110,12 @@ extension PhotoDetailViewModel {
     }
 
     private static func whenLoading(
-        imageURL: URL?,
         albumID: Int,
         photoID: Int,
         api: API
     ) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
             guard case .loading = state.status else { return Empty().eraseToAnyPublisher() }
-
-            let imagePublisher = (imageURL != nil)
-                ? api.image(for: imageURL!) // TODO sigh…
-                    .replaceError(with: nil)
-                    .eraseToAnyPublisher()
-                : Just<UIImage?>(nil)
-                    .setFailureType(to: Never.self)
-                    .eraseToAnyPublisher()
 
             let authorPublisher = api.album(with: albumID)
                 .flatMap { api.user(with: $0.userID) }
@@ -138,14 +128,13 @@ extension PhotoDetailViewModel {
                 .replaceError(with: nil)
                 .eraseToAnyPublisher()
 
-            return Publishers.CombineLatest3(
-                imagePublisher,
+            return Publishers.CombineLatest(
                 authorPublisher,
                 numberOfCommentsPublisher
             )
-                .replaceError(with: (nil, nil, nil))
-                .map { (image, author, numberOfComments) in
-                    Event.loaded(image: image, author: author, numberOfComments: numberOfComments)
+                .replaceError(with: (nil, nil))
+                .map { (author, numberOfComments) in
+                    Event.loaded(author: author, numberOfComments: numberOfComments)
             }
             .eraseToAnyPublisher()
         }
@@ -156,13 +145,15 @@ extension PhotoDetailViewModel {
     struct State: Then {
         var status: Status
 
+        let photoURL: URL
+
         // This is a temporary workaround for SwiftUI not having
         // `switch`es or `if-let`s
-        var props: (String, UIImage, String?, String?, Bool) {
-            guard case let .loaded(title, image, author, numberOfComments, isFavourite) = status
-            else { return ("", UIImage(named: "thumbnail_fixture")!, nil, nil, false) }
+        var props: (String, String?, String?, Bool) {
+            guard case let .loaded(title, author, numberOfComments, isFavourite) = status
+            else { return ("", nil, nil, false) }
 
-            return (title, image, author, numberOfComments, isFavourite)
+            return (title, author, numberOfComments, isFavourite)
         }
 
         fileprivate var title: String
@@ -170,13 +161,14 @@ extension PhotoDetailViewModel {
     }
 
     enum Status: Equatable {
+        case idle
         case loading
-        case loaded(title: String, image: UIImage, author: String?, numberOfComments: String?, isFavourite: Bool)
+        case loaded(title: String, author: String?, numberOfComments: String?, isFavourite: Bool)
         case notLoaded
     }
 
     enum Event {
-        case loaded(image: UIImage?, author: String?, numberOfComments: String?)
+        case loaded(author: String?, numberOfComments: String?)
         case ui(UI)
 
         enum UI {
@@ -193,11 +185,11 @@ extension PhotoDetailViewModel {
             state: .init(
                 status: PhotoDetailViewModel.Status.loaded(
                     title: "The title of the photo is great",
-                    image: .fixture(),
                     author: "Napoleone Bonaparte",
                     numberOfComments: "11",
                     isFavourite: true
                 ),
+                photoURL: .fixture(),
                 title: "The title of the photo is great",
                 isFavourite: true
             ),

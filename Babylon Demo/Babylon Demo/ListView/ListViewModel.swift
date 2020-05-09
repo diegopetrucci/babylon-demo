@@ -19,8 +19,7 @@ final class ListViewModel: ObservableObject {
             scheduler: RunLoop.main,
             feedbacks: [
                 Self.userInput(input.eraseToAnyPublisher()),
-                Self.whenLoadingMetadata(api: api),
-                Self.whenLoadingThumbnail(api: api)
+                Self.whenLoadingMetadata(api: api)
             ]
         )
             .assign(to: \.state, on: self)
@@ -37,8 +36,7 @@ final class ListViewModel: ObservableObject {
             scheduler: RunLoop.main,
             feedbacks: [
                 Self.userInput(input.eraseToAnyPublisher()),
-                Self.whenLoadingMetadata(api: api),
-                Self.whenLoadingThumbnail(api: api)
+                Self.whenLoadingMetadata(api: api)
             ]
         )
             .assign(to: \.state, on: self)
@@ -88,25 +86,6 @@ extension ListViewModel {
 
                 state.status = .loaded
             }
-        case let .ui(.onListCellAppear(index)):
-            // This is to avoid having multiple cells shown at the same time
-            // to trigger this. The poor's man lock.
-            guard case .loaded = state.status else { return state }
-
-            return state.with {
-//                // A better solution would be for the API to be
-//                // paginated. Since the images are small I feel
-//                // like downloading 10 of them at a time
-//                // is a good compromise, given that less than
-//                // that are shown in the screen without scrolling
-                let next9URLs = Array(state.elements[index...(index + 8)])
-                    .map { $0.thumbnailURL }
-
-                $0.status = .loadingThumbnail(
-                    indexes: Array(index...(index + 8)),
-                    urls: next9URLs
-                )
-            }
         }
     }
 }
@@ -142,22 +121,6 @@ extension ListViewModel {
                 .eraseToAnyPublisher()
         }
     }
-
-    private static func whenLoadingThumbnail(
-        api: API
-    ) -> Feedback<State, Event> {
-        Feedback { (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .loadingThumbnail(indexes, urls) = state.status
-            else { return Empty().eraseToAnyPublisher() }
-
-            let imagePublishers: [AnyPublisher<UIImage?, Never>] = urls.map { api.image(for: $0) }
-
-            return Publishers.MergeMany(imagePublishers)
-                .collect()
-                .map { Event.loadedThumbnails(image: $0, indexes: indexes) }
-                .eraseToAnyPublisher()
-        }
-    }
 }
 
 extension ListViewModel {
@@ -165,12 +128,15 @@ extension ListViewModel {
         var status: Status
         var thumbnails = Set<ListView.Thumbnail>()
         var elements: [ListView.Element] = []
+        var element5: [ListView.Element] {
+            let count = elements.count
+            return elements.dropLast(count - 5)
+        }
     }
 
     enum Status: Equatable {
         case loading
         case loaded
-        case loadingThumbnail(indexes: [Int], urls: [URL])
         case error
     }
 
@@ -181,7 +147,6 @@ extension ListViewModel {
         case ui(UI)
 
         enum UI {
-            case onListCellAppear(_ index: Int)
         }
     }
 }

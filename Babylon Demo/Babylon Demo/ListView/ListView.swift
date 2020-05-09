@@ -11,23 +11,32 @@ struct ListView: View {
                     Section {
                         List(viewModel.state.elements.filter { $0.isFavourite }.indices, id: \.self) { index in
                             ListCell(
-                                title: self.viewModel.state.elements[index].title,
-                                thumbnail: self.viewModel.state.thumbnails.first(where: { $0.id == self.viewModel.state.elements[index].id })
+                                image: DownloadableImageView(
+                                    viewModel: DownloadableImageViewModel( // TODO this should be injected
+                                        url: self.viewModel.state.elements[index].thumbnailURL,
+                                        preferredWidth: 150,
+                                        preferredHeight: 150
+                                    )
+                                ),
+                                title: self.viewModel.state.elements[index].title
                             )
                                 .onAppear(perform: { self.viewModel.send(.onListCellAppear(index)) })
                         }
                     }
                     // TODO the VM should sort them already
-                    List(viewModel.state.elements.sorted(by: ListViewModel.isSortedByFavourites).indices, id: \.self) { index in
+                    List(viewModel.state.element5.sorted(by: ListViewModel.isSortedByFavourites).indices, id: \.self) { index in
                         // TODO make it injected
                         NavigationLink(destination: PhotoDetailView(
                             viewModel: self.viewModel(for: self.viewModel.state.elements[index])
                         )) {
                             ListCell(
-                                title: self.viewModel.state.elements[index].title,
-                                thumbnail: self.viewModel.state.thumbnails.first(where: { $0.id == self.viewModel.state.elements[index].id })
+                                image: DownloadableImageView(
+                                    viewModel: DownloadableImageViewModel( // TODO this should be injected
+                                        url: self.viewModel.state.elements[index].thumbnailURL
+                                    )
+                                ),
+                                title: self.viewModel.state.elements[index].title
                             )
-                                .onAppear(perform: { self.viewModel.send(.onListCellAppear(index)) })
                         }
                         .background(self.viewModel.state.elements[index].isFavourite ? Color.yellow : nil)
                     }
@@ -53,12 +62,13 @@ extension ListView {
 }
 
 struct ListCell: View {
+    let image: DownloadableImageView
     let title: String
-    let thumbnail: ListView.Thumbnail?
 
     var body: some View {
         HStack(spacing: 10) {
-            thumbnailOrFallback(for: thumbnail)
+            image
+                .frame(idealWidth: 150, idealHeight: 150)
             Text(title)
             Spacer()
         }

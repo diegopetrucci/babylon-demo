@@ -69,17 +69,17 @@
 		6CA7ACD1245604DA004EC6EE /* Feedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		6CABFF0724673742000DA06C /* DownloadableImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadableImageViewModel.swift; sourceTree = "<group>"; };
 		6CABFF0A24674571000DA06C /* DownloadableImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadableImageView.swift; sourceTree = "<group>"; };
-		6CB3160C24007B4E002A644C /* Babylon Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Babylon Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6CB3160C24007B4E002A644C /* BabylonDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BabylonDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CB3160F24007B4E002A644C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6CB3161124007B4E002A644C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		6CB3161524007B50002A644C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6CB3161824007B50002A644C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6CB3161B24007B50002A644C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6CB3161D24007B50002A644C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6CB3162224007B50002A644C /* Babylon DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Babylon DemoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6CB3162224007B50002A644C /* BabylonDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BabylonDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CB3162624007B50002A644C /* Babylon_DemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Babylon_DemoTests.swift; sourceTree = "<group>"; };
 		6CB3162824007B50002A644C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6CB3162D24007B51002A644C /* Babylon DemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Babylon DemoUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6CB3162D24007B51002A644C /* BabylonDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BabylonDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CB3163124007B51002A644C /* Babylon_DemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Babylon_DemoUITests.swift; sourceTree = "<group>"; };
 		6CB3163324007B51002A644C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6CB3163F24007DE7002A644C /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
@@ -205,9 +205,9 @@
 		6CB3160D24007B4E002A644C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6CB3160C24007B4E002A644C /* Babylon Demo.app */,
-				6CB3162224007B50002A644C /* Babylon DemoTests.xctest */,
-				6CB3162D24007B51002A644C /* Babylon DemoUITests.xctest */,
+				6CB3160C24007B4E002A644C /* BabylonDemo.app */,
+				6CB3162224007B50002A644C /* BabylonDemoTests.xctest */,
+				6CB3162D24007B51002A644C /* BabylonDemoUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -259,9 +259,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6CB3160B24007B4E002A644C /* Babylon Demo */ = {
+		6CB3160B24007B4E002A644C /* BabylonDemo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6CB3163624007B51002A644C /* Build configuration list for PBXNativeTarget "Babylon Demo" */;
+			buildConfigurationList = 6CB3163624007B51002A644C /* Build configuration list for PBXNativeTarget "BabylonDemo" */;
 			buildPhases = (
 				6CB3160824007B4E002A644C /* Sources */,
 				6CB3160924007B4E002A644C /* Frameworks */,
@@ -271,17 +271,17 @@
 			);
 			dependencies = (
 			);
-			name = "Babylon Demo";
+			name = BabylonDemo;
 			packageProductDependencies = (
 				6CFD09AA245768D300C1A3CE /* Then */,
 			);
 			productName = "Babylon Demo";
-			productReference = 6CB3160C24007B4E002A644C /* Babylon Demo.app */;
+			productReference = 6CB3160C24007B4E002A644C /* BabylonDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6CB3162124007B50002A644C /* Babylon DemoTests */ = {
+		6CB3162124007B50002A644C /* BabylonDemoTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6CB3163924007B51002A644C /* Build configuration list for PBXNativeTarget "Babylon DemoTests" */;
+			buildConfigurationList = 6CB3163924007B51002A644C /* Build configuration list for PBXNativeTarget "BabylonDemoTests" */;
 			buildPhases = (
 				6CB3161E24007B50002A644C /* Sources */,
 				6CB3161F24007B50002A644C /* Frameworks */,
@@ -292,14 +292,14 @@
 			dependencies = (
 				6CB3162424007B50002A644C /* PBXTargetDependency */,
 			);
-			name = "Babylon DemoTests";
+			name = BabylonDemoTests;
 			productName = "Babylon DemoTests";
-			productReference = 6CB3162224007B50002A644C /* Babylon DemoTests.xctest */;
+			productReference = 6CB3162224007B50002A644C /* BabylonDemoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		6CB3162C24007B51002A644C /* Babylon DemoUITests */ = {
+		6CB3162C24007B51002A644C /* BabylonDemoUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6CB3163C24007B51002A644C /* Build configuration list for PBXNativeTarget "Babylon DemoUITests" */;
+			buildConfigurationList = 6CB3163C24007B51002A644C /* Build configuration list for PBXNativeTarget "BabylonDemoUITests" */;
 			buildPhases = (
 				6CB3162924007B51002A644C /* Sources */,
 				6CB3162A24007B51002A644C /* Frameworks */,
@@ -310,9 +310,9 @@
 			dependencies = (
 				6CB3162F24007B51002A644C /* PBXTargetDependency */,
 			);
-			name = "Babylon DemoUITests";
+			name = BabylonDemoUITests;
 			productName = "Babylon DemoUITests";
-			productReference = 6CB3162D24007B51002A644C /* Babylon DemoUITests.xctest */;
+			productReference = 6CB3162D24007B51002A644C /* BabylonDemoUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -338,7 +338,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6CB3160724007B4E002A644C /* Build configuration list for PBXProject "Babylon Demo" */;
+			buildConfigurationList = 6CB3160724007B4E002A644C /* Build configuration list for PBXProject "BabylonDemo" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -354,9 +354,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6CB3160B24007B4E002A644C /* Babylon Demo */,
-				6CB3162124007B50002A644C /* Babylon DemoTests */,
-				6CB3162C24007B51002A644C /* Babylon DemoUITests */,
+				6CB3160B24007B4E002A644C /* BabylonDemo */,
+				6CB3162124007B50002A644C /* BabylonDemoTests */,
+				6CB3162C24007B51002A644C /* BabylonDemoUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -438,12 +438,12 @@
 /* Begin PBXTargetDependency section */
 		6CB3162424007B50002A644C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6CB3160B24007B4E002A644C /* Babylon Demo */;
+			target = 6CB3160B24007B4E002A644C /* BabylonDemo */;
 			targetProxy = 6CB3162324007B50002A644C /* PBXContainerItemProxy */;
 		};
 		6CB3162F24007B51002A644C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6CB3160B24007B4E002A644C /* Babylon Demo */;
+			target = 6CB3160B24007B4E002A644C /* BabylonDemo */;
 			targetProxy = 6CB3162E24007B51002A644C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -631,7 +631,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Babylon Demo.app/Babylon Demo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BabylonDemo.app/BabylonDemo";
 			};
 			name = Debug;
 		};
@@ -652,7 +652,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Babylon Demo.app/Babylon Demo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BabylonDemo.app/BabylonDemo";
 			};
 			name = Release;
 		};
@@ -697,7 +697,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6CB3160724007B4E002A644C /* Build configuration list for PBXProject "Babylon Demo" */ = {
+		6CB3160724007B4E002A644C /* Build configuration list for PBXProject "BabylonDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6CB3163424007B51002A644C /* Debug */,
@@ -706,7 +706,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6CB3163624007B51002A644C /* Build configuration list for PBXNativeTarget "Babylon Demo" */ = {
+		6CB3163624007B51002A644C /* Build configuration list for PBXNativeTarget "BabylonDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6CB3163724007B51002A644C /* Debug */,
@@ -715,7 +715,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6CB3163924007B51002A644C /* Build configuration list for PBXNativeTarget "Babylon DemoTests" */ = {
+		6CB3163924007B51002A644C /* Build configuration list for PBXNativeTarget "BabylonDemoTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6CB3163A24007B51002A644C /* Debug */,
@@ -724,7 +724,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6CB3163C24007B51002A644C /* Build configuration list for PBXNativeTarget "Babylon DemoUITests" */ = {
+		6CB3163C24007B51002A644C /* Build configuration list for PBXNativeTarget "BabylonDemoUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6CB3163D24007B51002A644C /* Debug */,

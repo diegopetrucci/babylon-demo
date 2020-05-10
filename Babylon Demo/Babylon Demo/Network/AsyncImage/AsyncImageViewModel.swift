@@ -3,7 +3,7 @@ import class UIKit.UIImage
 import Foundation
 import Then
 
-final class DownloadableImageViewModel: ObservableObject {
+final class AsyncImageViewModel: ObservableObject {
     @Published private(set) var state: State
 
     private var cancellables = Set<AnyCancellable>()
@@ -27,13 +27,13 @@ final class DownloadableImageViewModel: ObservableObject {
     }
 }
 
-extension DownloadableImageViewModel {
+extension AsyncImageViewModel {
     func send(event: Event.UI) {
         input.send(event)
     }
 }
 
-extension DownloadableImageViewModel {
+extension AsyncImageViewModel {
     private static func reduce(_ state: State, _ event: Event) -> State {
         switch event {
         case .ui(.onAppear):
@@ -62,7 +62,7 @@ extension DownloadableImageViewModel {
     }
 }
 
-extension DownloadableImageViewModel {
+extension AsyncImageViewModel {
     private static func whenLoading(url: URL) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
             guard case .idle = state.status else { return Empty().eraseToAnyPublisher() }
@@ -76,7 +76,7 @@ extension DownloadableImageViewModel {
     }
 }
 
-extension DownloadableImageViewModel {
+extension AsyncImageViewModel {
     struct State: Then {
         var status: Status
 
@@ -109,7 +109,7 @@ extension DownloadableImageViewModel {
     }
 }
 
-extension DownloadableImageViewModel {
+extension AsyncImageViewModel {
     static var placeholder: UIImage {
         UIImage(named: "thumbnail_mock")!
     }

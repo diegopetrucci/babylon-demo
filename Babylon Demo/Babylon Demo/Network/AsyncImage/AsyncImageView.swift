@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct DownloadableImageView: View {
-    @ObservedObject var viewModel: DownloadableImageViewModel
+struct AsyncImageView: View {
+    @ObservedObject var viewModel: AsyncImageViewModel
 
     var body: some View {
         // Note: I really did not want to use `AnyView` here,
@@ -16,7 +16,7 @@ struct DownloadableImageView: View {
                 )
             } else {
                 return AnyView(
-                    Image(uiImage: DownloadableImageViewModel.placeholder)
+                    Image(uiImage: AsyncImageViewModel.placeholder)
                 )
             }
         }

@@ -13,6 +13,7 @@
 		6C0D4B9D24032C7000294299 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6C0D4B9C24032C7000294299 /* README.md */; };
 		6C1A3E1F245ECCE800382F30 /* URL+Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C1A3E1E245ECCE800382F30 /* URL+Fixture.swift */; };
 		6C1A3E21245ECD6000382F30 /* UIImage+Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C1A3E20245ECD6000382F30 /* UIImage+Fixture.swift */; };
+		6C32D08624682BCA002D7B33 /* Disk in Frameworks */ = {isa = PBXBuildFile; productRef = 6C32D08524682BCA002D7B33 /* Disk */; };
 		6C687EC6245ED2DC00DD5620 /* CGSize+Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C687EC5245ED2DC00DD5620 /* CGSize+Fixture.swift */; };
 		6C97C7012453616E007B5862 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C97C6FE2453616E007B5862 /* Album.swift */; };
 		6C97C7022453616E007B5862 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C97C6FF2453616E007B5862 /* User.swift */; };
@@ -94,6 +95,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6CFD09AB245768D300C1A3CE /* Then in Frameworks */,
+				6C32D08624682BCA002D7B33 /* Disk in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,6 +276,7 @@
 			name = "Babylon Demo";
 			packageProductDependencies = (
 				6CFD09AA245768D300C1A3CE /* Then */,
+				6C32D08524682BCA002D7B33 /* Disk */,
 			);
 			productName = "Babylon Demo";
 			productReference = 6CB3160C24007B4E002A644C /* Babylon Demo.app */;
@@ -349,6 +352,7 @@
 			mainGroup = 6CB3160324007B4E002A644C;
 			packageReferences = (
 				6CFD09A9245768D300C1A3CE /* XCRemoteSwiftPackageReference "Then" */,
+				6C32D08424682BCA002D7B33 /* XCRemoteSwiftPackageReference "Disk" */,
 			);
 			productRefGroup = 6CB3160D24007B4E002A644C /* Products */;
 			projectDirPath = "";
@@ -736,6 +740,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		6C32D08424682BCA002D7B33 /* XCRemoteSwiftPackageReference "Disk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:saoudrizwan/Disk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.4;
+			};
+		};
 		6CFD09A9245768D300C1A3CE /* XCRemoteSwiftPackageReference "Then" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:devxoul/Then.git";
@@ -747,6 +759,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		6C32D08524682BCA002D7B33 /* Disk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6C32D08424682BCA002D7B33 /* XCRemoteSwiftPackageReference "Disk" */;
+			productName = Disk;
+		};
 		6CFD09AA245768D300C1A3CE /* Then */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 6CFD09A9245768D300C1A3CE /* XCRemoteSwiftPackageReference "Then" */;

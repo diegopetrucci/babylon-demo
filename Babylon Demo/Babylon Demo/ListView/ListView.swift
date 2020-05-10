@@ -14,7 +14,8 @@ struct ListView: View {
                                 image: AsyncImageView(
                                     viewModel: AsyncImageViewModel( // TODO this should be injected
                                         url: self.viewModel.state.elements[index].thumbnailURL,
-                                         imagePath: "/ListView/\(self.viewModel.state.elements[index].id)"
+                                        imagePath: "/ListView/\(self.viewModel.state.elements[index].id)",
+                                        dataProvider: AsyncImageDataProvider()
                                     )
                                 ),
                                 title: self.viewModel.state.elements[index].title
@@ -31,7 +32,8 @@ struct ListView: View {
                                 image: AsyncImageView(
                                     viewModel: AsyncImageViewModel( // TODO this should be injected
                                         url: self.viewModel.state.elements[index].thumbnailURL,
-                                         imagePath: "/ListView/\(self.viewModel.state.elements[index].id)"
+                                        imagePath: "/ListView/\(self.viewModel.state.elements[index].id)",
+                                        dataProvider: AsyncImageDataProvider()
                                     )
                                 ),
                                 title: self.viewModel.state.elements[index].title

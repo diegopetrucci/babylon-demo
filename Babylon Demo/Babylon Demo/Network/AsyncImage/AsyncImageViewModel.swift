@@ -10,7 +10,11 @@ final class AsyncImageViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let input = PassthroughSubject<Event.UI, Never>()
 
-    init(url: URL, imagePath: String) {
+    init(
+        url: URL,
+        imagePath: String, // TODO should these be removed and injected directly to the data provider?
+        dataProvider: AsyncImageDataProviderProtocol
+    ) {
         self.state = State(
             status: .idle
         )
@@ -20,8 +24,9 @@ final class AsyncImageViewModel: ObservableObject {
             reduce: Self.reduce,
             scheduler: RunLoop.main,
             feedbacks: [
-                Self.whenLoading(url: url, imagePath: imagePath),
-                Self.whenLoaded(imagePath: imagePath)
+                Self.whenLoading(url: url, imagePath: imagePath, dataProvider: dataProvider),
+                Self.whenLoaded(imagePath: imagePath, dataProvider: dataProvider),
+                Self.userInput(input.eraseToAnyPublisher())
             ]
         )
             .assign(to: \.state, on: self)
@@ -60,6 +65,10 @@ extension AsyncImageViewModel {
             } else {
                 return state.with { $0.status = .failed(placeholder: Self.placeholder) }
             }
+        case .failedToLoad:
+            return state
+        case .persisted:
+            return state
         }
     }
 }
@@ -67,45 +76,38 @@ extension AsyncImageViewModel {
 extension AsyncImageViewModel {
     private static func whenLoading(
         url: URL,
-        imagePath: String
+        imagePath: String,
+        dataProvider: AsyncImageDataProviderProtocol
     ) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
-            guard case .idle = state.status else { return Empty().eraseToAnyPublisher() }
+            guard case .loading = state.status else { return Empty().eraseToAnyPublisher() }
 
-            // TODO: the VM should not directly call Disk, have a wrapper instead
-            //       and maybe, even better, a DataProvider
-            if let image = try? Disk.retrieve(imagePath, from: .caches, as: UIImage.self) {
-                print("Image retrieved at path: \(imagePath)")
-                return Just(Event.loaded(image))
-                    .eraseToAnyPublisher()
-            }
-
-            return URLSession.shared.dataTaskPublisher(for: url)
-                .map { data, _ in UIImage(data: data) }
-                .replaceError(with: nil)
+            return dataProvider.fetchImage(url: url, imagePath: imagePath)
                 .map(Event.loaded)
+                .replaceError(with: .failedToLoad)
                 .eraseToAnyPublisher()
         }
     }
 
-    private static func whenLoaded(imagePath: String) -> Feedback<State, Event> {
+    private static func whenLoaded(
+        imagePath: String,
+        dataProvider: AsyncImageDataProviderProtocol
+    ) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .loaded(image) = state.status
-            else {
-                return Empty().eraseToAnyPublisher()
-            }
+            guard case let .loaded(image) = state.status else { return Empty().eraseToAnyPublisher() }
 
-            if (try? Disk.retrieve(imagePath, from: .caches, as: UIImage.self)) != nil {
-                print("Image already present at path: \(imagePath)")
-                return Empty().eraseToAnyPublisher()
-            }
-
-            if (try? Disk.save(image, to: .caches, as: imagePath)) != nil {
-                print("Image saved at path: \(imagePath)")
-            }
-
-            return Empty().eraseToAnyPublisher()
+            return dataProvider.persistImage(image: image, imagePath: imagePath)
+                .map{ _ in Event.persisted }
+                .eraseToAnyPublisher()
         }
+    }
+
+    private static func userInput(_ input: AnyPublisher<Event.UI, Never>) -> Feedback<State, Event> {
+        Feedback(run: { _ in
+            input
+                .map(Event.ui)
+                .eraseToAnyPublisher()
+        })
     }
 }
 
@@ -134,6 +136,8 @@ extension AsyncImageViewModel {
     enum Event {
         case ui(UI)
         case loaded(UIImage?)
+        case failedToLoad
+        case persisted
 
         enum UI {
             case onAppear

@@ -45,7 +45,8 @@ extension PhotoDetailView {
                 AsyncImageView(
                     viewModel: .init(
                         url: photoURL,
-                        imagePath: "/PhotoDetail/\(viewModel.state.photoID)"
+                        imagePath: "/PhotoDetail/\(viewModel.state.photoID)",
+                        dataProvider: AsyncImageDataProvider()
                     )
                 ) // TODO
                 HStack {

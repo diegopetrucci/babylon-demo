@@ -7,7 +7,6 @@ final class ListViewModel: ObservableObject {
     @Published private(set) var state: State
 
     private var cancellables = Set<AnyCancellable>()
-    private var input = PassthroughSubject<Event.UI, Never>()
 
     #if DEBUG
     init(state: State, api: API = JSONPlaceholderAPI()) {
@@ -18,7 +17,6 @@ final class ListViewModel: ObservableObject {
             reduce: Self.reduce,
             scheduler: RunLoop.main,
             feedbacks: [
-                Self.userInput(input.eraseToAnyPublisher()),
                 Self.whenLoadingMetadata(api: api)
             ]
         )
@@ -35,7 +33,6 @@ final class ListViewModel: ObservableObject {
             reduce: Self.reduce,
             scheduler: RunLoop.main,
             feedbacks: [
-                Self.userInput(input.eraseToAnyPublisher()),
                 Self.whenLoadingMetadata(api: api)
             ]
         )
@@ -91,20 +88,6 @@ extension ListViewModel {
 }
 
 extension ListViewModel {
-    func send(_ event: Event.UI) {
-        input.send(event)
-    }
-}
-
-extension ListViewModel {
-    private static func userInput(_ input: AnyPublisher<Event.UI, Never>) -> Feedback<State, Event> {
-        Feedback(run: { _ in
-            input
-                .map(Event.ui)
-                .eraseToAnyPublisher()
-        })
-    }
-
     private static func whenLoadingMetadata(api: API) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
             guard case .loading = state.status else { return Empty().eraseToAnyPublisher() }
@@ -144,10 +127,6 @@ extension ListViewModel {
         case loadedMetadata([ListView.Element])
         case failedToLoadMetadata
         case loadedThumbnails(image: [UIImage?], indexes: [Int])
-        case ui(UI)
-
-        enum UI {
-        }
     }
 }
 

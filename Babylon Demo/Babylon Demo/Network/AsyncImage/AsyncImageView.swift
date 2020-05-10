@@ -20,8 +20,7 @@ struct AsyncImageView: View {
                 )
             }
         }
-        .onAppear {
-            self.viewModel.send(event: .onAppear) }
+        .onAppear { self.viewModel.send(event: .onAppear) }
         .onDisappear { self.viewModel.send(event: .onDisappear) }
     }
 }

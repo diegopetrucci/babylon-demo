@@ -42,7 +42,13 @@ extension PhotoDetailView {
     ) -> some View {
         ZStack(alignment: .bottom) {
             ZStack(alignment: .top) {
-                DownloadableImageView(viewModel: .init(url: photoURL))
+                AsyncImageView(
+                    viewModel: .init(
+                        url: photoURL,
+                        imagePath: "/PhotoDetail/\(viewModel.state.photoID)",
+                        dataProvider: AsyncImageDataProvider()
+                    )
+                ) // TODO
                 HStack {
                     Text(title)
                         .foregroundColor(Color.white)

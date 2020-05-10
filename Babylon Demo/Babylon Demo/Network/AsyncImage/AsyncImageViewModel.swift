@@ -2,14 +2,19 @@ import Combine
 import class UIKit.UIImage
 import Foundation
 import Then
+import Disk
 
-final class DownloadableImageViewModel: ObservableObject {
+final class AsyncImageViewModel: ObservableObject {
     @Published private(set) var state: State
 
     private var cancellables = Set<AnyCancellable>()
     private let input = PassthroughSubject<Event.UI, Never>()
 
-    init(url: URL) {
+    init(
+        url: URL,
+        imagePath: String, // TODO should these be removed and injected directly to the data provider?
+        dataProvider: AsyncImageDataProviderProtocol
+    ) {
         self.state = State(
             status: .idle
         )
@@ -19,7 +24,9 @@ final class DownloadableImageViewModel: ObservableObject {
             reduce: Self.reduce,
             scheduler: RunLoop.main,
             feedbacks: [
-                Self.whenLoading(url: url)
+                Self.whenLoading(url: url, imagePath: imagePath, dataProvider: dataProvider),
+                Self.whenLoaded(imagePath: imagePath, dataProvider: dataProvider),
+                Self.userInput(input.eraseToAnyPublisher())
             ]
         )
             .assign(to: \.state, on: self)
@@ -27,13 +34,13 @@ final class DownloadableImageViewModel: ObservableObject {
     }
 }
 
-extension DownloadableImageViewModel {
+extension AsyncImageViewModel {
     func send(event: Event.UI) {
         input.send(event)
     }
 }
 
-extension DownloadableImageViewModel {
+extension AsyncImageViewModel {
     private static func reduce(_ state: State, _ event: Event) -> State {
         switch event {
         case .ui(.onAppear):
@@ -58,25 +65,53 @@ extension DownloadableImageViewModel {
             } else {
                 return state.with { $0.status = .failed(placeholder: Self.placeholder) }
             }
+        case .failedToLoad:
+            return state
+        case .persisted:
+            return state
         }
     }
 }
 
-extension DownloadableImageViewModel {
-    private static func whenLoading(url: URL) -> Feedback<State, Event> {
+extension AsyncImageViewModel {
+    private static func whenLoading(
+        url: URL,
+        imagePath: String,
+        dataProvider: AsyncImageDataProviderProtocol
+    ) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
-            guard case .idle = state.status else { return Empty().eraseToAnyPublisher() }
+            guard case .loading = state.status else { return Empty().eraseToAnyPublisher() }
 
-            return URLSession.shared.dataTaskPublisher(for: url)
-                .map { data, _ in UIImage(data: data) }
-                .replaceError(with: nil)
+            return dataProvider.fetchImage(url: url, imagePath: imagePath)
                 .map(Event.loaded)
+                .replaceError(with: .failedToLoad)
                 .eraseToAnyPublisher()
         }
     }
+
+    private static func whenLoaded(
+        imagePath: String,
+        dataProvider: AsyncImageDataProviderProtocol
+    ) -> Feedback<State, Event> {
+        Feedback { (state: State) -> AnyPublisher<Event, Never> in
+            guard case let .loaded(image) = state.status else { return Empty().eraseToAnyPublisher() }
+
+            return dataProvider.persistImage(image: image, imagePath: imagePath)
+                .map{ _ in Event.persisted }
+                .eraseToAnyPublisher()
+        }
+    }
+
+    private static func userInput(_ input: AnyPublisher<Event.UI, Never>) -> Feedback<State, Event> {
+        Feedback(run: { _ in
+            input
+                .map(Event.ui)
+                .eraseToAnyPublisher()
+        })
+    }
 }
 
-extension DownloadableImageViewModel {
+extension AsyncImageViewModel {
     struct State: Then {
         var status: Status
 
@@ -101,6 +136,8 @@ extension DownloadableImageViewModel {
     enum Event {
         case ui(UI)
         case loaded(UIImage?)
+        case failedToLoad
+        case persisted
 
         enum UI {
             case onAppear
@@ -109,7 +146,7 @@ extension DownloadableImageViewModel {
     }
 }
 
-extension DownloadableImageViewModel {
+extension AsyncImageViewModel {
     static var placeholder: UIImage {
         UIImage(named: "thumbnail_mock")!
     }

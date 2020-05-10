@@ -17,3 +17,4 @@ Babylon demo project in SwiftUI &amp; Combine
 * make sure accessibility is good
 * write to disk
 * create a feedback initializers that lenses the state's status
+* add reachability

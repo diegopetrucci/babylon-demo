@@ -11,9 +11,10 @@ struct ListView: View {
                     Section {
                         List(viewModel.state.elements.filter { $0.isFavourite }.indices, id: \.self) { index in
                             ListCell(
-                                image: DownloadableImageView(
-                                    viewModel: DownloadableImageViewModel( // TODO this should be injected
-                                        url: self.viewModel.state.elements[index].thumbnailURL
+                                image: AsyncImageView(
+                                    viewModel: AsyncImageViewModel( // TODO this should be injected
+                                        url: self.viewModel.state.elements[index].thumbnailURL,
+                                         imagePath: "/ListView/\(self.viewModel.state.elements[index].id)"
                                     )
                                 ),
                                 title: self.viewModel.state.elements[index].title
@@ -27,9 +28,10 @@ struct ListView: View {
                             viewModel: self.viewModel(for: self.viewModel.state.elements[index])
                         )) {
                             ListCell(
-                                image: DownloadableImageView(
-                                    viewModel: DownloadableImageViewModel( // TODO this should be injected
-                                        url: self.viewModel.state.elements[index].thumbnailURL
+                                image: AsyncImageView(
+                                    viewModel: AsyncImageViewModel( // TODO this should be injected
+                                        url: self.viewModel.state.elements[index].thumbnailURL,
+                                         imagePath: "/ListView/\(self.viewModel.state.elements[index].id)"
                                     )
                                 ),
                                 title: self.viewModel.state.elements[index].title
@@ -59,7 +61,7 @@ extension ListView {
 }
 
 struct ListCell: View {
-    let image: DownloadableImageView
+    let image: AsyncImageView
     let title: String
 
     var body: some View {

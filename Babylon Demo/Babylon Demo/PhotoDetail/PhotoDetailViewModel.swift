@@ -46,6 +46,7 @@ final class PhotoDetailViewModel: ObservableObject {
     ) {
         state = State(
             status: .idle,
+            photoID: photoID,
             photoURL: photoURL,
             title: element.title,
             isFavourite: element.isFavourite
@@ -145,6 +146,7 @@ extension PhotoDetailViewModel {
     struct State: Then {
         var status: Status
 
+        let photoID: Int
         let photoURL: URL
 
         // This is a temporary workaround for SwiftUI not having
@@ -189,6 +191,7 @@ extension PhotoDetailViewModel {
                     numberOfComments: "11",
                     isFavourite: true
                 ),
+                photoID: 2,
                 photoURL: .fixture(),
                 title: "The title of the photo is great",
                 isFavourite: true

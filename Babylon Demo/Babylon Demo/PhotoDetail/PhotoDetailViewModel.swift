@@ -13,7 +13,8 @@ final class PhotoDetailViewModel: ObservableObject {
     #if DEBUG
     init(
         state: State,
-        element: ListView.Element, // TODO inject only the strict necessary
+        title: String,
+        isFavourite: Bool,
         albumID: Int,
         photoID: Int,
         photoURL: URL,
@@ -30,8 +31,8 @@ final class PhotoDetailViewModel: ObservableObject {
                 Self.whenLoading(
                     albumID: albumID,
                     photoID: photoID,
-                    title: element.title,
-                    isFavourite: element.isFavourite,
+                    title: title,
+                    isFavourite: isFavourite,
                     photoURL: photoURL,
                     api: api)
             ]
@@ -42,7 +43,8 @@ final class PhotoDetailViewModel: ObservableObject {
     #endif
 
     init(
-        element: ListView.Element,
+        title: String,
+        isFavourite: Bool,
         albumID: Int,
         photoID: Int,
         photoURL: URL,
@@ -59,10 +61,11 @@ final class PhotoDetailViewModel: ObservableObject {
                 Self.whenLoading(
                     albumID: albumID,
                     photoID: photoID,
-                    title: element.title,
-                    isFavourite: element.isFavourite,
+                    title: title,
+                    isFavourite: isFavourite,
                     photoURL: photoURL,
-                    api: api)
+                    api: api
+                )
             ]
         )
             .assign(to: \.state, on: self)
@@ -78,6 +81,7 @@ extension PhotoDetailViewModel {
 
 extension PhotoDetailViewModel {
     private static func reduce(_ state: State, _ event: Event) -> State {
+        print(event)
         switch event {
         case let .loaded(photoDetail):
             return state.with { $0.status = .loaded(photoDetail) }
@@ -114,52 +118,27 @@ extension PhotoDetailViewModel {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
             guard case .loading = state.status else { return Empty().eraseToAnyPublisher() }
 
-            let authorPublisher = api.album(with: albumID)
-                .flatMap { api.user(with: $0.userID) }
-                .map { $0.name }
-                .eraseToAnyPublisher()
-
-//            let numberOfCommentsPublisher = api.comments(for: photoID)
-//                .map { a -> Int in
-//                    print(a)
-//                    return a.count
-//            }
-//                .eraseToAnyPublisher()
-
-            return authorPublisher
-                .map { author in
+            return Publishers.Zip(
+                api.album(with: albumID)
+                    .flatMap { api.user(with: $0.userID) }
+                    .map { $0.name },
+                api.comments(for: photoID)
+                    .map { $0.count }
+            )
+                .map { (author, numberOfComments) in
                     Event.loaded(
                         PhotoDetail(
                             id: photoID,
                             title: title,
                             author: author,
-                            numberOfComments: 5,
+                            numberOfComments: numberOfComments,
                             isFavourite: isFavourite,
                             photoURL: photoURL
                         )
                     )
                 }
-            .replaceError(with: Event.failedToLoad)
-            .eraseToAnyPublisher()
-
-//            return Publishers.CombineLatest(
-//                authorPublisher,
-//                numberOfCommentsPublisher
-//            )
-//                .map { (author, numberOfComments) in
-//                    Event.loaded(
-//                        PhotoDetail(
-//                            id: photoID,
-//                            title: title,
-//                            author: author,
-//                            numberOfComments: numberOfComments,
-//                            isFavourite: isFavourite,
-//                            photoURL: photoURL
-//                        )
-//                    )
-//                }
-//                .replaceError(with: Event.failedToLoad)
-//                .eraseToAnyPublisher()
+                .replaceError(with: Event.failedToLoad)
+                .eraseToAnyPublisher()
         }
     }
 }
@@ -223,7 +202,8 @@ extension PhotoDetailViewModel {
                     )
                 )
             ),
-            element: .fixture(),
+            title: "The title of the photo is great",
+            isFavourite: true,
             albumID: 1,
             photoID: 2,
             photoURL: .fixture(),

@@ -26,7 +26,7 @@ final class ListViewModel: ObservableObject {
     #endif
 
     init(api: API = JSONPlaceholderAPI()) {
-        state = .init(status: .loading)
+        state = .init(status: .loading, api: api)
 
         Publishers.system(
             initial: state,
@@ -78,6 +78,49 @@ extension ListViewModel {
     struct State: Then {
         var status: Status
         var elements: [ListView.Element] = []
+
+        private let api: API
+
+        init(
+            status: Status,
+            elements: [ListView.Element] = [],
+            api: API
+        ) {
+            self.status = status
+            self.elements = elements
+            self.api = api
+        }
+
+        // TODO this should be the job of a coordinator of sorts
+        //      but unfortunately there does not seem to be a nice
+        //      patter for SwiftUI yet.
+        func destination(for index: Array<ListView.Element>.Index) -> PhotoDetailView {
+            print(index)
+            let element = elements[index]
+
+            return PhotoDetailView(
+                viewModel: .init(
+                    title: element.title,
+                    isFavourite: element.isFavourite,
+                    albumID: element.albumID,
+                    photoID: element.id,
+                    photoURL: element.photoURL,
+                    api: api
+                )
+            )
+        }
+
+        func asyncImageView(for index: Array<ListView.Element>.Index) -> AsyncImageView {
+            let element = elements[index]
+
+            return AsyncImageView(
+                viewModel: AsyncImageViewModel(
+                    url: element.thumbnailURL,
+                    imagePath: "/ListView/\(element.id)",
+                    dataProvider: AsyncImageDataProvider()
+                )
+            )
+        }
     }
 
     enum Status: Equatable {
@@ -109,6 +152,7 @@ private func element(from photo: Photo) -> ListView.Element {
     ListView.Element(
         id: photo.id,
         title: photo.title,
+        photoURL: photo.url,
         thumbnailURL: photo.thumbnailURL,
         isFavourite: false,
         albumID: photo.albumID
@@ -121,7 +165,8 @@ extension ListViewModel {
         .init(
             state: .init(
                 status: .loaded,
-                elements: [.fixture(isFavourite: true), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture()]
+                elements: [.fixture(isFavourite: true), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture()],
+                api: APIFixture()
             ),
             api: APIFixture()
         )

@@ -10,18 +10,11 @@ struct ListView: View {
                 NavigationView {
                     // TODO the VM should sort them already
                     List(viewModel.state.elements.sorted(by: ListViewModel.isSortedByFavourites).indices, id: \.self) { index in
-                        // TODO make it injected
-                        NavigationLink(destination: PhotoDetailView(
-                            viewModel: self.viewModel(for: self.viewModel.state.elements[index])
-                        )) {
+                        NavigationLink(
+                            destination: self.viewModel.state.destination(for: index)
+                        ) {
                             ListCell(
-                                image: AsyncImageView(
-                                    viewModel: AsyncImageViewModel( // TODO this should be injected
-                                        url: self.viewModel.state.elements[index].thumbnailURL,
-                                        imagePath: "/ListView/\(self.viewModel.state.elements[index].id)",
-                                        dataProvider: AsyncImageDataProvider()
-                                    )
-                                ),
+                                image: self.viewModel.state.asyncImageView(for: index),
                                 title: self.viewModel.state.elements[index].title
                             )
                         }
@@ -33,18 +26,6 @@ struct ListView: View {
                 Text("Data has not loaded yet")
             }
         }
-    }
-}
-
-extension ListView {
-    private func viewModel(for element: ListView.Element) -> PhotoDetailViewModel {
-        .init(
-            element: element,
-            albumID: element.albumID,
-            photoID: element.id,
-            photoURL: element.thumbnailURL,
-            api: JSONPlaceholderAPI()
-        )
     }
 }
 

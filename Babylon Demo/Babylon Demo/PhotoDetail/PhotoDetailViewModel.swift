@@ -9,10 +9,11 @@ final class PhotoDetailViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let input = PassthroughSubject<Event.UI, Never>()
 
+    // Unfortunately this cannot be extracted into an extension
     #if DEBUG
     init(
         state: State,
-        element: ListView.Element,
+        element: ListView.Element, // TODO inject only the strict necessary
         albumID: Int,
         photoID: Int,
         photoURL: URL,
@@ -29,6 +30,9 @@ final class PhotoDetailViewModel: ObservableObject {
                 Self.whenLoading(
                     albumID: albumID,
                     photoID: photoID,
+                    title: element.title,
+                    isFavourite: element.isFavourite,
+                    photoURL: photoURL,
                     api: api)
             ]
         )
@@ -44,13 +48,7 @@ final class PhotoDetailViewModel: ObservableObject {
         photoURL: URL,
         api: API = JSONPlaceholderAPI()
     ) {
-        state = State(
-            status: .idle,
-            photoID: photoID,
-            photoURL: photoURL,
-            title: element.title,
-            isFavourite: element.isFavourite
-        )
+        state = State(status: .idle)
 
         Publishers.system(
             initial: state,
@@ -61,6 +59,9 @@ final class PhotoDetailViewModel: ObservableObject {
                 Self.whenLoading(
                     albumID: albumID,
                     photoID: photoID,
+                    title: element.title,
+                    isFavourite: element.isFavourite,
+                    photoURL: photoURL,
                     api: api)
             ]
         )
@@ -78,25 +79,17 @@ extension PhotoDetailViewModel {
 extension PhotoDetailViewModel {
     private static func reduce(_ state: State, _ event: Event) -> State {
         switch event {
-        case let .loaded(author, numberOfComments):
-            return state.with {
-                $0.status = .loaded(
-                    title: state.title,
-                    author: author,
-                    numberOfComments: numberOfComments,
-                    isFavourite: state.isFavourite
-                )
-            }
+        case let .loaded(photoDetail):
+            return state.with { $0.status = .loaded(photoDetail) }
         case let .ui(ui):
             switch ui {
             case .onAppear:
-                // We want to avoid unnecessarily double-reloading
-                if case .loaded = state.status { return state }
-
                 return state.with { $0.status = .loading }
             case .tappedFavouriteButton:
-                return state.with { $0.isFavourite.toggle() } // TODO does this work?
+                return state // TODO
             }
+        case .failedToLoad:
+            return state // TODO
         }
     }
 }
@@ -113,6 +106,9 @@ extension PhotoDetailViewModel {
     private static func whenLoading(
         albumID: Int,
         photoID: Int,
+        title: String,
+        isFavourite: Bool,
+        photoURL: URL,
         api: API
     ) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
@@ -121,23 +117,49 @@ extension PhotoDetailViewModel {
             let authorPublisher = api.album(with: albumID)
                 .flatMap { api.user(with: $0.userID) }
                 .map { $0.name }
-                .replaceError(with: nil)
                 .eraseToAnyPublisher()
 
-            let numberOfCommentsPublisher = api.numberOfComments(for: photoID)
-                .map(String.init) // TODO
-                .replaceError(with: nil)
-                .eraseToAnyPublisher()
+//            let numberOfCommentsPublisher = api.comments(for: photoID)
+//                .map { a -> Int in
+//                    print(a)
+//                    return a.count
+//            }
+//                .eraseToAnyPublisher()
 
-            return Publishers.CombineLatest(
-                authorPublisher,
-                numberOfCommentsPublisher
-            )
-                .replaceError(with: (nil, nil))
-                .map { (author, numberOfComments) in
-                    Event.loaded(author: author, numberOfComments: numberOfComments)
-            }
+            return authorPublisher
+                .map { author in
+                    Event.loaded(
+                        PhotoDetail(
+                            id: photoID,
+                            title: title,
+                            author: author,
+                            numberOfComments: 5,
+                            isFavourite: isFavourite,
+                            photoURL: photoURL
+                        )
+                    )
+                }
+            .replaceError(with: Event.failedToLoad)
             .eraseToAnyPublisher()
+
+//            return Publishers.CombineLatest(
+//                authorPublisher,
+//                numberOfCommentsPublisher
+//            )
+//                .map { (author, numberOfComments) in
+//                    Event.loaded(
+//                        PhotoDetail(
+//                            id: photoID,
+//                            title: title,
+//                            author: author,
+//                            numberOfComments: numberOfComments,
+//                            isFavourite: isFavourite,
+//                            photoURL: photoURL
+//                        )
+//                    )
+//                }
+//                .replaceError(with: Event.failedToLoad)
+//                .eraseToAnyPublisher()
         }
     }
 }
@@ -146,37 +168,42 @@ extension PhotoDetailViewModel {
     struct State: Then {
         var status: Status
 
-        let photoID: Int
-        let photoURL: URL
-
         // This is a temporary workaround for SwiftUI not having
         // `switch`es or `if-let`s
-        var props: (String, String?, String?, Bool) {
-            guard case let .loaded(title, author, numberOfComments, isFavourite) = status
-            else { return ("", nil, nil, false) }
+        var photoDetail: PhotoDetail {
+            guard case let .loaded(photoDetail) = status
+            else { fatalError("This should not be called except when status is loaded.") }
 
-            return (title, author, numberOfComments, isFavourite)
+            return photoDetail
         }
-
-        fileprivate var title: String
-        fileprivate var isFavourite: Bool // TODO write to storage
     }
 
     enum Status: Equatable {
         case idle
         case loading
-        case loaded(title: String, author: String?, numberOfComments: String?, isFavourite: Bool)
+        case loaded(PhotoDetail)
         case notLoaded
     }
 
     enum Event {
-        case loaded(author: String?, numberOfComments: String?)
+        case loaded(PhotoDetail)
+        case failedToLoad
         case ui(UI)
 
         enum UI {
             case onAppear
             case tappedFavouriteButton
         }
+    }
+}
+extension PhotoDetailViewModel {
+    struct PhotoDetail: Equatable {
+        let id: Int
+        let title: String
+        let author: String
+        let numberOfComments: Int
+        var isFavourite: Bool
+        let photoURL: URL // TODO temp until the AsyncImageView/Model is injectedb
     }
 }
 
@@ -186,15 +213,15 @@ extension PhotoDetailViewModel {
         .init(
             state: .init(
                 status: PhotoDetailViewModel.Status.loaded(
-                    title: "The title of the photo is great",
-                    author: "Napoleone Bonaparte",
-                    numberOfComments: "11",
-                    isFavourite: true
-                ),
-                photoID: 2,
-                photoURL: .fixture(),
-                title: "The title of the photo is great",
-                isFavourite: true
+                    .init(
+                        id: 2,
+                        title: "The title of the photo is great",
+                        author: "Napoleone Bonaparte",
+                        numberOfComments: 11,
+                        isFavourite: true,
+                        photoURL: URL(string: "https://google.com")!
+                    )
+                )
             ),
             element: .fixture(),
             albumID: 1,

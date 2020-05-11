@@ -7,7 +7,7 @@ protocol API {
     func image(for url: URL) -> AnyPublisher<UIImage?, Never>
     func album(with albumID: Int) -> AnyPublisher<Album, RemoteError>
     func user(with userID: Int) -> AnyPublisher<User, RemoteError>
-    func numberOfComments(for photoID: Int) -> AnyPublisher<Int, RemoteError>
+    func comments(for photoID: Int) -> AnyPublisher<[Comment], RemoteError>
 }
 
 struct JSONPlaceholderAPI {
@@ -35,7 +35,7 @@ extension JSONPlaceholderAPI: API {
         remote.load(from: baseURL.appendingPathComponent("users/\(userID)"))
     }
 
-    func numberOfComments(for photoID: Int) -> AnyPublisher<Int, RemoteError> {
+    func comments(for photoID: Int) -> AnyPublisher<[Comment], RemoteError> {
         remote.load(from: baseURL.appendingPathComponent("photos/\(photoID)/comments"))
     }
 }
@@ -66,8 +66,8 @@ struct APIFixture: API {
             .eraseToAnyPublisher()
     }
 
-    func numberOfComments(for photoID: Int) -> AnyPublisher<Int, RemoteError> {
-        Just<Int>(13)
+    func comments(for photoID: Int) -> AnyPublisher<[Comment], RemoteError> {
+        Just<[Comment]>([.fixture(), .fixture(), .fixture()])
             .setFailureType(to: RemoteError.self)
             .eraseToAnyPublisher()
     }

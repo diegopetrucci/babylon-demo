@@ -26,7 +26,7 @@ final class ListViewModel: ObservableObject {
     #endif
 
     init(api: API = JSONPlaceholderAPI()) {
-        state = .init(status: .loading)
+        state = .init(status: .loading, api: api)
 
         Publishers.system(
             initial: state,
@@ -51,38 +51,6 @@ extension ListViewModel {
             }
         case .failedToLoadMetadata:
             return state.with { $0.status = .error }
-        case let .loadedThumbnails(images, indexes):
-            return state.with { state in
-                // TODO I don't particulary like this solution of doing `index - firstIndex`
-                //      It works, but it feels like a hack.
-                guard let firstIndex = indexes.first
-                else { fatalError("There cannot be no indexes.") }
-
-                indexes.forEach { index in
-                    if let thumbnail = state.thumbnails.first(where: { $0.id == state.elements[index].id }) {
-                        state.thumbnails.remove(thumbnail)
-                        state.thumbnails.insert(
-                            ListView.Thumbnail(
-                                id: state.elements[index].id,
-                                url: state.elements[index].thumbnailURL,
-                                image: images[index - firstIndex],
-                                size: images[index - firstIndex]?.size
-                            )
-                        )
-                    } else {
-                        state.thumbnails.insert(
-                            ListView.Thumbnail(
-                                id: state.elements[index].id,
-                                url: state.elements[index].thumbnailURL,
-                                image: images[index - firstIndex],
-                                size: images[index - firstIndex]?.size
-                            )
-                        )
-                    }
-                }
-
-                state.status = .loaded
-            }
         }
     }
 }
@@ -109,11 +77,49 @@ extension ListViewModel {
 extension ListViewModel {
     struct State: Then {
         var status: Status
-        var thumbnails = Set<ListView.Thumbnail>()
         var elements: [ListView.Element] = []
-        var element5: [ListView.Element] {
-            let count = elements.count
-            return elements.dropLast(count - 5)
+
+        private let api: API
+
+        init(
+            status: Status,
+            elements: [ListView.Element] = [],
+            api: API
+        ) {
+            self.status = status
+            self.elements = elements
+            self.api = api
+        }
+
+        // TODO this should be the job of a coordinator of sorts
+        //      but unfortunately there does not seem to be a nice
+        //      patter for SwiftUI yet.
+        func destination(for index: Array<ListView.Element>.Index) -> PhotoDetailView {
+            print(index)
+            let element = elements[index]
+
+            return PhotoDetailView(
+                viewModel: .init(
+                    title: element.title,
+                    isFavourite: element.isFavourite,
+                    albumID: element.albumID,
+                    photoID: element.id,
+                    photoURL: element.photoURL,
+                    api: api
+                )
+            )
+        }
+
+        func asyncImageView(for index: Array<ListView.Element>.Index) -> AsyncImageView {
+            let element = elements[index]
+
+            return AsyncImageView(
+                viewModel: AsyncImageViewModel(
+                    url: element.thumbnailURL,
+                    imagePath: "/ListView/\(element.id)",
+                    dataProvider: AsyncImageDataProvider()
+                )
+            )
         }
     }
 
@@ -126,7 +132,6 @@ extension ListViewModel {
     enum Event {
         case loadedMetadata([ListView.Element])
         case failedToLoadMetadata
-        case loadedThumbnails(image: [UIImage?], indexes: [Int])
     }
 }
 
@@ -147,13 +152,8 @@ private func element(from photo: Photo) -> ListView.Element {
     ListView.Element(
         id: photo.id,
         title: photo.title,
+        photoURL: photo.url,
         thumbnailURL: photo.thumbnailURL,
-        thumbnail: ListView.Thumbnail(
-            id: photo.id,
-            url: photo.thumbnailURL,
-            image: nil,
-            size: nil
-        ),
         isFavourite: false,
         albumID: photo.albumID
     )
@@ -165,7 +165,8 @@ extension ListViewModel {
         .init(
             state: .init(
                 status: .loaded,
-                elements: [.fixture(isFavourite: true), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture()]
+                elements: [.fixture(isFavourite: true), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture()],
+                api: APIFixture()
             ),
             api: APIFixture()
         )

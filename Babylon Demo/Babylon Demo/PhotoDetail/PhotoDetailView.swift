@@ -12,7 +12,9 @@ struct PhotoDetailView: View {
 extension PhotoDetailView {
     private func render(state: PhotoDetailViewModel.State) -> some View {
         // TODO: is it possible to remove the wrapping into `AnyView`s?
-        if state.status == .loading {
+        if state.status == .idle {
+            return AnyView(Text("Loading information, please wait…"))
+        } else if state.status == .loading {
             return AnyView(Text("Loading information, please wait…"))
         } else if state.status == .notLoaded {
             // TODO add retry button
@@ -23,10 +25,13 @@ extension PhotoDetailView {
             // e.g:
             // case let .loaded(title, image, author, numberOfComments, isFavourite)
             // So I had to resort to exposing these computed in the VM
-            return AnyView(VStack(spacing: 10) {
-                photo(with: state.props.0, state.photoURL, state.props.1, state.props.2, state.props.3)
-                commentsView(numberOfComments: state.props.2)
-            })
+            return AnyView(
+                VStack(spacing: 10) {
+                    photo(with: state.photoDetail)
+                    commentsView(numberOfComments: state.photoDetail.numberOfComments) // TODO this breaks the layout lol
+                    Spacer()
+                }
+            )
         }
     }
 }
@@ -34,37 +39,31 @@ extension PhotoDetailView {
 // TODO This view needs to be broken up, it's unreadable
 extension PhotoDetailView {
     private func photo(
-        with title: String,
-        _ photoURL: URL,
-        _ author: String?,
-        _ numberOfComments: String?,
-        _ isFavourite: Bool
+        with photoDetail: PhotoDetailViewModel.PhotoDetail
     ) -> some View {
         ZStack(alignment: .bottom) {
             ZStack(alignment: .top) {
-                AsyncImageView(
+                AsyncImageView( // TODO this should be injected
                     viewModel: .init(
-                        url: photoURL,
-                        imagePath: "/PhotoDetail/\(viewModel.state.photoID)",
+                        url: photoDetail.photoURL,
+                        imagePath: "/PhotoDetail/\(viewModel.state.photoDetail.id)",
                         dataProvider: AsyncImageDataProvider()
                     )
-                ) // TODO
+                )
                 HStack {
-                    Text(title)
+                    Text(photoDetail.title)
                         .foregroundColor(Color.white)
                         .font(.title)
                     Spacer()
                     Button(
                         action: { self.viewModel.send(event: .tappedFavouriteButton) },
-                        label: { Text(isFavourite ? "★" : "☆"
+                        label: { Text(photoDetail.isFavourite ? "★" : "☆"
                     )
                     .font(.largeTitle) }).padding()
                 }
-                .padding()
+                    .padding()
             }
-            if author != nil {
-                 authorView(name: author!) // TODO sigh…
-            }
+            authorView(name: photoDetail.author)
         }
     }
 
@@ -80,15 +79,10 @@ extension PhotoDetailView {
         }
     }
     
-    private func commentsView(numberOfComments: String?) -> some View {
-        Group {
-            if numberOfComments != nil {
-                HStack {
-                    Text("Number of comments: \(numberOfComments!)") // Sigh…
-                        .padding()
-                    Spacer()
-                }
-            }
+    private func commentsView(numberOfComments: Int) -> some View {
+        HStack {
+            Text("Number of comments: \(numberOfComments)")
+                .padding()
             Spacer()
         }
     }

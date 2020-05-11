@@ -80,12 +80,10 @@ extension PhotoDetailView {
     }
     
     private func commentsView(numberOfComments: Int) -> some View {
-        VStack {
-            HStack {
-                Text("Number of comments: \(numberOfComments)")
-                    .padding()
-                Spacer()
-            }
+        HStack {
+            Text("Number of comments: \(numberOfComments)")
+                .padding()
+            Spacer()
         }
     }
 }

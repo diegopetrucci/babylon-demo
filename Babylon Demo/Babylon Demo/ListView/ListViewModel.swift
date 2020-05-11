@@ -51,36 +51,6 @@ extension ListViewModel {
             }
         case .failedToLoadMetadata:
             return state.with { $0.status = .error }
-        case let .loadedThumbnails(images, indexes):
-            return state.with { state in
-                // TODO I don't particulary like this solution of doing `index - firstIndex`
-                //      It works, but it feels like a hack.
-                guard let firstIndex = indexes.first
-                else { fatalError("There cannot be no indexes.") }
-
-                indexes.forEach { index in
-                    if let thumbnail = state.thumbnails.first(where: { $0.id == state.elements[index].id }) {
-                        state.thumbnails.remove(thumbnail)
-                        state.thumbnails.insert(
-                            ListView.Thumbnail(
-                                id: state.elements[index].id,
-                                image: images[index - firstIndex],
-                                size: images[index - firstIndex]?.size
-                            )
-                        )
-                    } else {
-                        state.thumbnails.insert(
-                            ListView.Thumbnail(
-                                id: state.elements[index].id,
-                                image: images[index - firstIndex],
-                                size: images[index - firstIndex]?.size
-                            )
-                        )
-                    }
-                }
-
-                state.status = .loaded
-            }
         }
     }
 }
@@ -107,12 +77,7 @@ extension ListViewModel {
 extension ListViewModel {
     struct State: Then {
         var status: Status
-        var thumbnails = Set<ListView.Thumbnail>()
         var elements: [ListView.Element] = []
-        var element5: [ListView.Element] {
-            let count = elements.count
-            return elements.dropLast(count - 5)
-        }
     }
 
     enum Status: Equatable {
@@ -124,7 +89,6 @@ extension ListViewModel {
     enum Event {
         case loadedMetadata([ListView.Element])
         case failedToLoadMetadata
-        case loadedThumbnails(image: [UIImage?], indexes: [Int])
     }
 }
 
@@ -146,11 +110,6 @@ private func element(from photo: Photo) -> ListView.Element {
         id: photo.id,
         title: photo.title,
         thumbnailURL: photo.thumbnailURL,
-        thumbnail: ListView.Thumbnail(
-            id: photo.id,
-            image: nil,
-            size: nil
-        ),
         isFavourite: false,
         albumID: photo.albumID
     )

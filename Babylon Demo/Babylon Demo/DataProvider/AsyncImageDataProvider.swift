@@ -44,3 +44,19 @@ struct AsyncImageDataProvider: AsyncImageDataProviderProtocol {
 enum AsyncImageDataProviderError: Error {
     case failure(RemoteError)
 }
+
+#if DEBUG
+struct AsyncImageDataProviderFixture: AsyncImageDataProviderProtocol {
+    func fetchImage(url: URL, imagePath: String) -> AnyPublisher<UIImage, AsyncImageDataProviderError> {
+        Just(UIImage.fixture())
+            .setFailureType(to: AsyncImageDataProviderError.self)
+            .eraseToAnyPublisher()
+    }
+
+    func persistImage(image: UIImage, imagePath: String) -> AnyPublisher<Void, Never> {
+        Just(())
+            .eraseToAnyPublisher()
+    }
+}
+#endif
+

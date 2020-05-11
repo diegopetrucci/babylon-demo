@@ -17,10 +17,20 @@ struct AsyncImageView: View {
             } else {
                 return AnyView(
                     Image(uiImage: AsyncImageViewModel.placeholder)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                 )
             }
         }
         .onAppear { self.viewModel.send(event: .onAppear) }
         .onDisappear { self.viewModel.send(event: .onDisappear) }
+    }
+}
+
+struct AsyncImageView_Previews: PreviewProvider {
+    static var previews: some View {
+        AsyncImageView(
+            viewModel: .fixture()
+        )
     }
 }

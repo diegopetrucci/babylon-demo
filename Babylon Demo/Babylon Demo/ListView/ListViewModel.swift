@@ -64,7 +64,6 @@ extension ListViewModel {
                         state.thumbnails.insert(
                             ListView.Thumbnail(
                                 id: state.elements[index].id,
-                                url: state.elements[index].thumbnailURL,
                                 image: images[index - firstIndex],
                                 size: images[index - firstIndex]?.size
                             )
@@ -73,7 +72,6 @@ extension ListViewModel {
                         state.thumbnails.insert(
                             ListView.Thumbnail(
                                 id: state.elements[index].id,
-                                url: state.elements[index].thumbnailURL,
                                 image: images[index - firstIndex],
                                 size: images[index - firstIndex]?.size
                             )
@@ -150,7 +148,6 @@ private func element(from photo: Photo) -> ListView.Element {
         thumbnailURL: photo.thumbnailURL,
         thumbnail: ListView.Thumbnail(
             id: photo.id,
-            url: photo.thumbnailURL,
             image: nil,
             size: nil
         ),

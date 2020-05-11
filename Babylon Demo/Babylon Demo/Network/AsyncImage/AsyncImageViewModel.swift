@@ -151,3 +151,15 @@ extension AsyncImageViewModel {
         UIImage(named: "thumbnail_mock")!
     }
 }
+
+#if DEBUG
+extension AsyncImageViewModel {
+    static func fixture() -> AsyncImageViewModel {
+        AsyncImageViewModel.init(
+            url: .fixture(),
+            imagePath: "/Fixture/photo",
+            dataProvider: AsyncImageDataProviderFixture()
+        )
+    }
+}
+#endif

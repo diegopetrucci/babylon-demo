@@ -13,7 +13,6 @@ extension ListView {
     
     struct Thumbnail {
         let id: Int
-        let url: URL // TODO preferably this would not be exposed to the view
         let image: UIImage?
         let size: CGSize?
     }
@@ -36,7 +35,6 @@ extension ListView.Element {
             thumbnailURL: .fixture(),
             thumbnail: .init(
                 id: 2,
-                url: .fixture(),
                 image: .fixture(),
                 size: CGSize(width: 150, height: 150)
             ),
@@ -51,7 +49,6 @@ extension ListView.Thumbnail {
     static func fixture() -> ListView.Thumbnail {
         .init(
             id: 2,
-            url: .fixture(),
             image: .fixture(),
             size: .fixture()
         )

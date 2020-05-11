@@ -28,7 +28,7 @@ extension PhotoDetailView {
             return AnyView(
                 VStack(spacing: 10) {
                     photo(with: state.photoDetail)
-//                    commentsView(numberOfComments: state.photoDetail.numberOfComments) // TODO this breaks the layout lol
+                    commentsView(numberOfComments: state.photoDetail.numberOfComments) // TODO this breaks the layout lol
                     Spacer()
                 }
             )
@@ -80,10 +80,12 @@ extension PhotoDetailView {
     }
     
     private func commentsView(numberOfComments: Int) -> some View {
-        VStack(alignment: .leading) {
-            Text("Number of comments: \(numberOfComments)")
-                .padding()
-            Spacer()
+        VStack {
+            HStack {
+                Text("Number of comments: \(numberOfComments)")
+                    .padding()
+                Spacer()
+            }
         }
     }
 }

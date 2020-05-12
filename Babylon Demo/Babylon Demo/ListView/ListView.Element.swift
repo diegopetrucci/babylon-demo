@@ -12,6 +12,8 @@ extension ListView {
     }
 }
 
+extension ListView.Element: Codable {}
+
 #if DEBUG
 extension ListView.Element {
     static func fixture(isFavourite: Bool = false) -> ListView.Element {

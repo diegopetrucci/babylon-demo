@@ -9,7 +9,7 @@ final class ListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     #if DEBUG
-    init(state: State, api: API = JSONPlaceholderAPI()) {
+    init(state: State) {
         self.state = state
 
         Publishers.system(
@@ -17,7 +17,8 @@ final class ListViewModel: ObservableObject {
             reduce: Self.reduce,
             scheduler: RunLoop.main,
             feedbacks: [
-                Self.whenLoadingMetadata(api: api)
+                Self.whenLoadingMetadata(dataProvider: ListDataProviderFixture()),
+                Self.whenLoaded(dataProvider: ListDataProviderFixture())
             ]
         )
             .assign(to: \.state, on: self)
@@ -25,7 +26,7 @@ final class ListViewModel: ObservableObject {
     }
     #endif
 
-    init(api: API = JSONPlaceholderAPI()) {
+    init(dataProvider: ListDataProviderProtocol, api: API = JSONPlaceholderAPI()) {
         state = .init(status: .loading, api: api)
 
         Publishers.system(
@@ -33,7 +34,8 @@ final class ListViewModel: ObservableObject {
             reduce: Self.reduce,
             scheduler: RunLoop.main,
             feedbacks: [
-                Self.whenLoadingMetadata(api: api)
+                Self.whenLoadingMetadata(dataProvider: dataProvider),
+                Self.whenLoaded(dataProvider: dataProvider)
             ]
         )
             .assign(to: \.state, on: self)
@@ -51,28 +53,38 @@ extension ListViewModel {
             }
         case .failedToLoadMetadata:
             return state.with { $0.status = .error }
+        case .persisted:
+            return state.with { $0.status = .persisted }
         }
     }
 }
 
 extension ListViewModel {
-    private static func whenLoadingMetadata(api: API) -> Feedback<State, Event> {
+    private static func whenLoadingMetadata(
+        dataProvider: ListDataProviderProtocol
+    ) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
             guard case .loading = state.status else { return Empty().eraseToAnyPublisher() }
 
-            // The API has no pagination, so given that this data
-            // is loaded extremely fast I've decided to download it
-            // in one go, decode it, and map it to `ListView.Element`.
-            // Having a paginated API would definitely be better.
-            return api.photos()
-                .map { photos in photos.map(element(from:)) }
-                .map { $0.sorted(by: Self.isSortedByFavourites) }
+            return dataProvider.fetchMetadata()
                 .map(Event.loadedMetadata)
                 .replaceError(with: Event.failedToLoadMetadata)
                 .eraseToAnyPublisher()
         }
     }
+
+    private static func whenLoaded(dataProvider: ListDataProviderProtocol) -> Feedback<State, Event> {
+        Feedback { (state: State) -> AnyPublisher<Event, Never> in
+            guard case .loaded = state.status else { return Empty().eraseToAnyPublisher() }
+
+            return dataProvider.persist(elements: state.elements)
+                .map { _ in Event.persisted }
+                .eraseToAnyPublisher()
+        }
+    }
 }
+
+// TODO add a save data
 
 extension ListViewModel {
     struct State: Then {
@@ -95,7 +107,6 @@ extension ListViewModel {
         //      but unfortunately there does not seem to be a nice
         //      patter for SwiftUI yet.
         func destination(for index: Array<ListView.Element>.Index) -> PhotoDetailView {
-            print(index)
             let element = elements[index]
 
             return PhotoDetailView(
@@ -117,7 +128,7 @@ extension ListViewModel {
                 viewModel: AsyncImageViewModel(
                     url: element.thumbnailURL,
                     imagePath: "/ListView/\(element.id)",
-                    dataProvider: AsyncImageDataProvider()
+                    dataProvider: AsyncImageDataProvider(api: api) // TODO the VM should not be creating this
                 )
             )
         }
@@ -126,12 +137,14 @@ extension ListViewModel {
     enum Status: Equatable {
         case loading
         case loaded
+        case persisted
         case error
     }
 
     enum Event {
         case loadedMetadata([ListView.Element])
         case failedToLoadMetadata
+        case persisted
     }
 }
 
@@ -148,26 +161,11 @@ extension ListViewModel {
     }
 }
 
-private func element(from photo: Photo) -> ListView.Element {
-    ListView.Element(
-        id: photo.id,
-        title: photo.title,
-        photoURL: photo.url,
-        thumbnailURL: photo.thumbnailURL,
-        isFavourite: false,
-        albumID: photo.albumID
-    )
-}
-
 #if DEBUG
 extension ListViewModel {
     static func fixture() -> ListViewModel {
         .init(
-            state: .init(
-                status: .loaded,
-                elements: [.fixture(isFavourite: true), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture(), .fixture()],
-                api: APIFixture()
-            ),
+            dataProvider: ListDataProviderFixture(),
             api: APIFixture()
         )
     }

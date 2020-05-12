@@ -50,7 +50,7 @@ final class PhotoDetailViewModel: ObservableObject {
         photoURL: URL,
         api: API = JSONPlaceholderAPI()
     ) {
-        state = State(status: .idle)
+        state = State(status: .idle, api: api)
 
         Publishers.system(
             initial: state,
@@ -81,7 +81,6 @@ extension PhotoDetailViewModel {
 
 extension PhotoDetailViewModel {
     private static func reduce(_ state: State, _ event: Event) -> State {
-        print(event)
         switch event {
         case let .loaded(photoDetail):
             return state.with { $0.status = .loaded(photoDetail) }
@@ -155,6 +154,26 @@ extension PhotoDetailViewModel {
 
             return photoDetail
         }
+
+        private let api: API
+
+        init(
+            status: Status,
+            api: API
+        ) {
+            self.status = status
+            self.api = api
+        }
+
+        func asyncImageView() -> AsyncImageView {
+            AsyncImageView( // Note: same consideration as per the AsyncImageViewModel in ListView s
+                viewModel: .init(
+                    url: photoDetail.photoURL,
+                    imagePath: "/PhotoDetail/\(photoDetail.id)",
+                    dataProvider: AsyncImageDataProvider(api: api)
+                )
+            )
+        }
     }
 
     enum Status: Equatable {
@@ -200,7 +219,8 @@ extension PhotoDetailViewModel {
                         isFavourite: true,
                         photoURL: URL(string: "https://google.com")!
                     )
-                )
+                ),
+                api: APIFixture()
             ),
             title: "The title of the photo is great",
             isFavourite: true,

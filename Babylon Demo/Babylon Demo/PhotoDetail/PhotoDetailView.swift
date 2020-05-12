@@ -43,13 +43,7 @@ extension PhotoDetailView {
     ) -> some View {
         ZStack(alignment: .bottom) {
             ZStack(alignment: .top) {
-                AsyncImageView( // TODO this should be injected
-                    viewModel: .init(
-                        url: photoDetail.photoURL,
-                        imagePath: "/PhotoDetail/\(viewModel.state.photoDetail.id)",
-                        dataProvider: AsyncImageDataProvider()
-                    )
-                )
+                viewModel.state.asyncImageView()
                 HStack {
                     Text(photoDetail.title)
                         .foregroundColor(Color.white)

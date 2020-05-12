@@ -10,6 +10,12 @@ protocol AsyncImageDataProviderProtocol {
 }
 
 struct AsyncImageDataProvider: AsyncImageDataProviderProtocol {
+    private let api: API
+
+    init(api: API) {
+        self.api = api
+    }
+    
     func fetchImage(url: URL, imagePath: String) -> AnyPublisher<UIImage, AsyncImageDataProviderError> {
         if let image = try? Disk.retrieve(imagePath, from: .caches, as: UIImage.self) {
             print("Image retrieved at path: \(imagePath)")
@@ -19,8 +25,7 @@ struct AsyncImageDataProvider: AsyncImageDataProviderProtocol {
                 .eraseToAnyPublisher()
         }
 
-        return URLSession.shared.dataTaskPublisher(for: url)
-            .map { data, _ in UIImage(data: data) }
+        return api.image(for: url)
             .compactMap { $0 } // TODO should the return type be an optional?
             .mapError { AsyncImageDataProviderError.failure(RemoteError.error($0)) }
             .eraseToAnyPublisher()
@@ -32,10 +37,8 @@ struct AsyncImageDataProvider: AsyncImageDataProviderProtocol {
             return Empty().eraseToAnyPublisher()
         }
 
-        if (try? Disk.save(image, to: .caches, as: imagePath)) != nil {
-            print("Image saved at path: \(imagePath)")
-            return Empty().eraseToAnyPublisher()
-        }
+        try? Disk.save(image, to: .caches, as: imagePath)
+        print("Image saved at path: \(imagePath)")
 
         return Empty().eraseToAnyPublisher()
     }

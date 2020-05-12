@@ -33,6 +33,7 @@
 		6CB3162724007B50002A644C /* Babylon_DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3162624007B50002A644C /* Babylon_DemoTests.swift */; };
 		6CB3163224007B51002A644C /* Babylon_DemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3163124007B51002A644C /* Babylon_DemoUITests.swift */; };
 		6CB3164024007DE7002A644C /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3163F24007DE7002A644C /* ListView.swift */; };
+		6CB584BD246B353A0062DF13 /* TimelaneCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 6CB584BC246B353A0062DF13 /* TimelaneCombine */; };
 		6CE056DF2468876B00DF709D /* AsyncImageDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE056DE2468876B00DF709D /* AsyncImageDataProvider.swift */; };
 		6CE19B2D2468AA0400DD285B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE19B2C2468AA0400DD285B /* Comment.swift */; };
 		6CED1A4B245365D600234F45 /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CED1A4A245365D600234F45 /* ListViewModel.swift */; };
@@ -103,6 +104,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6CFD09AB245768D300C1A3CE /* Then in Frameworks */,
+				6CB584BD246B353A0062DF13 /* TimelaneCombine in Frameworks */,
 				6C32D08624682BCA002D7B33 /* Disk in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -297,6 +299,7 @@
 			packageProductDependencies = (
 				6CFD09AA245768D300C1A3CE /* Then */,
 				6C32D08524682BCA002D7B33 /* Disk */,
+				6CB584BC246B353A0062DF13 /* TimelaneCombine */,
 			);
 			productName = "Babylon Demo";
 			productReference = 6CB3160C24007B4E002A644C /* Babylon Demo.app */;
@@ -373,6 +376,7 @@
 			packageReferences = (
 				6CFD09A9245768D300C1A3CE /* XCRemoteSwiftPackageReference "Then" */,
 				6C32D08424682BCA002D7B33 /* XCRemoteSwiftPackageReference "Disk" */,
+				6CB584BB246B353A0062DF13 /* XCRemoteSwiftPackageReference "TimelaneCombine" */,
 			);
 			productRefGroup = 6CB3160D24007B4E002A644C /* Products */;
 			projectDirPath = "";
@@ -772,6 +776,14 @@
 				minimumVersion = 0.6.4;
 			};
 		};
+		6CB584BB246B353A0062DF13 /* XCRemoteSwiftPackageReference "TimelaneCombine" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/icanzilb/TimelaneCombine";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.6;
+			};
+		};
 		6CFD09A9245768D300C1A3CE /* XCRemoteSwiftPackageReference "Then" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:devxoul/Then.git";
@@ -787,6 +799,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6C32D08424682BCA002D7B33 /* XCRemoteSwiftPackageReference "Disk" */;
 			productName = Disk;
+		};
+		6CB584BC246B353A0062DF13 /* TimelaneCombine */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6CB584BB246B353A0062DF13 /* XCRemoteSwiftPackageReference "TimelaneCombine" */;
+			productName = TimelaneCombine;
 		};
 		6CFD09AA245768D300C1A3CE /* Then */ = {
 			isa = XCSwiftPackageProductDependency;

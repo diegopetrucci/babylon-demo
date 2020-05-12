@@ -62,7 +62,6 @@ extension ListDataProvider {
     }
 }
 
-
 extension ListDataProvider {
     static func isSortedByFavourites(firstElement: ListView.Element, secondElement: ListView.Element) -> Bool {
         switch (firstElement.isFavourite, secondElement.isFavourite) {

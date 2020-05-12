@@ -18,7 +18,7 @@ final class PhotoDetailViewModel: ObservableObject {
         albumID: Int,
         photoID: Int,
         photoURL: URL,
-        api: API = JSONPlaceholderAPI()
+        dataProvider: PhotoDetailDataProviderProtocol
     ) {
         self.state = state
 
@@ -34,7 +34,9 @@ final class PhotoDetailViewModel: ObservableObject {
                     title: title,
                     isFavourite: isFavourite,
                     photoURL: photoURL,
-                    api: api)
+                    dataProvider: dataProvider
+                ),
+                Self.whenPersisting(dataProvider: dataProvider, photoID: photoID)
             ]
         )
             .assign(to: \.state, on: self)
@@ -48,7 +50,8 @@ final class PhotoDetailViewModel: ObservableObject {
         albumID: Int,
         photoID: Int,
         photoURL: URL,
-        api: API = JSONPlaceholderAPI()
+        api: API,
+        dataProvider: PhotoDetailDataProviderProtocol
     ) {
         state = State(status: .idle, api: api)
 
@@ -64,8 +67,9 @@ final class PhotoDetailViewModel: ObservableObject {
                     title: title,
                     isFavourite: isFavourite,
                     photoURL: photoURL,
-                    api: api
-                )
+                    dataProvider: dataProvider
+                ),
+                Self.whenPersisting(dataProvider: dataProvider, photoID: photoID)
             ]
         )
             .assign(to: \.state, on: self)
@@ -93,6 +97,8 @@ extension PhotoDetailViewModel {
             }
         case .failedToLoad:
             return state // TODO
+        case .persisted:
+            return state.with { $0.status = .persisted(state.photoDetail) }
         }
     }
 }
@@ -112,18 +118,12 @@ extension PhotoDetailViewModel {
         title: String,
         isFavourite: Bool,
         photoURL: URL,
-        api: API
+        dataProvider: PhotoDetailDataProviderProtocol
     ) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
             guard case .loading = state.status else { return Empty().eraseToAnyPublisher() }
 
-            return Publishers.Zip(
-                api.album(with: albumID)
-                    .flatMap { api.user(with: $0.userID) }
-                    .map { $0.name },
-                api.comments(for: photoID)
-                    .map { $0.count }
-            )
+            return dataProvider.fetchAuthorAndNumberOfComments(albumID: albumID, photoID: photoID)
                 .map { (author, numberOfComments) in
                     Event.loaded(
                         PhotoDetail(
@@ -140,6 +140,23 @@ extension PhotoDetailViewModel {
                 .eraseToAnyPublisher()
         }
     }
+
+    private static func whenPersisting(
+        dataProvider: PhotoDetailDataProviderProtocol,
+        photoID: Int
+    ) -> Feedback<State, Event> {
+        Feedback { (state: State) -> AnyPublisher<Event, Never> in
+            guard case .loaded = state.status else { return Empty().eraseToAnyPublisher() }
+
+            return dataProvider.persist(
+                author: state.photoDetail.author,
+                numberOfComments: state.photoDetail.numberOfComments,
+                photoID: photoID
+            )
+                .map { _ in Event.persisted }
+                .eraseToAnyPublisher()
+        }
+    }
 }
 
 extension PhotoDetailViewModel {
@@ -149,18 +166,19 @@ extension PhotoDetailViewModel {
         // This is a temporary workaround for SwiftUI not having
         // `switch`es or `if-let`s
         var photoDetail: PhotoDetail {
-            guard case let .loaded(photoDetail) = status
-            else { fatalError("This should not be called except when status is loaded.") }
-
-            return photoDetail
+            switch status {
+            case let .loaded(photoDetail):
+                return photoDetail
+            case let .persisted(photoDetail):
+                return photoDetail
+            default:
+                fatalError("This should not be called except when status is loaded.")
+            }
         }
 
         private let api: API
 
-        init(
-            status: Status,
-            api: API
-        ) {
+        init(status: Status, api: API) {
             self.status = status
             self.api = api
         }
@@ -181,11 +199,13 @@ extension PhotoDetailViewModel {
         case loading
         case loaded(PhotoDetail)
         case notLoaded
+        case persisted(PhotoDetail)
     }
 
     enum Event {
         case loaded(PhotoDetail)
         case failedToLoad
+        case persisted
         case ui(UI)
 
         enum UI {
@@ -227,7 +247,7 @@ extension PhotoDetailViewModel {
             albumID: 1,
             photoID: 2,
             photoURL: .fixture(),
-            api: APIFixture()
+            dataProvider: PhotoDetailDataProviderFixture()
         )
     }
 }

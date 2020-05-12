@@ -116,7 +116,8 @@ extension ListViewModel {
                     albumID: element.albumID,
                     photoID: element.id,
                     photoURL: element.photoURL,
-                    api: api
+                    api: api,
+                    dataProvider: PhotoDetailDataProvider(api: api)
                 )
             )
         }

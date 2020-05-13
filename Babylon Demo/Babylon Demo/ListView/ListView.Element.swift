@@ -13,6 +13,7 @@ extension ListView {
 }
 
 extension ListView.Element: Codable {}
+extension ListView.Element: Equatable {}
 
 #if DEBUG
 extension ListView.Element {

@@ -34,6 +34,8 @@
 		6CB3163224007B51002A644C /* Babylon_DemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3163124007B51002A644C /* Babylon_DemoUITests.swift */; };
 		6CB3164024007DE7002A644C /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3163F24007DE7002A644C /* ListView.swift */; };
 		6CB584BD246B353A0062DF13 /* TimelaneCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 6CB584BC246B353A0062DF13 /* TimelaneCombine */; };
+		6CB584C2246C63630062DF13 /* ListDataProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB584C0246C63480062DF13 /* ListDataProviderTests.swift */; };
+		6CB584C5246C87190062DF13 /* Persister.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB584C4246C87190062DF13 /* Persister.swift */; };
 		6CE056DF2468876B00DF709D /* AsyncImageDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE056DE2468876B00DF709D /* AsyncImageDataProvider.swift */; };
 		6CE19B2D2468AA0400DD285B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE19B2C2468AA0400DD285B /* Comment.swift */; };
 		6CED1A4B245365D600234F45 /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CED1A4A245365D600234F45 /* ListViewModel.swift */; };
@@ -91,6 +93,8 @@
 		6CB3163124007B51002A644C /* Babylon_DemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Babylon_DemoUITests.swift; sourceTree = "<group>"; };
 		6CB3163324007B51002A644C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6CB3163F24007DE7002A644C /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		6CB584C0246C63480062DF13 /* ListDataProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDataProviderTests.swift; sourceTree = "<group>"; };
+		6CB584C4246C87190062DF13 /* Persister.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persister.swift; sourceTree = "<group>"; };
 		6CE056DE2468876B00DF709D /* AsyncImageDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageDataProvider.swift; sourceTree = "<group>"; };
 		6CE19B2C2468AA0400DD285B /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		6CED1A4A245365D600234F45 /* ListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModel.swift; sourceTree = "<group>"; };
@@ -235,6 +239,7 @@
 				6C0D4B9B2403298800294299 /* PhotoDetail */,
 				6CE056DD2468872E00DF709D /* DataProvider */,
 				6C97C70424536185007B5862 /* Network */,
+				6CB584C3246C87030062DF13 /* Persistence */,
 				6C0D4B932400A21F00294299 /* Utils */,
 				6CB3161524007B50002A644C /* Assets.xcassets */,
 				6CB3161A24007B50002A644C /* LaunchScreen.storyboard */,
@@ -270,9 +275,26 @@
 			path = "Babylon DemoUITests";
 			sourceTree = "<group>";
 		};
+		6CB584BF246C63320062DF13 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				6CB584C0246C63480062DF13 /* ListDataProviderTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		6CB584C3246C87030062DF13 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				6CB584C4246C87190062DF13 /* Persister.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
 		6CE056DD2468872E00DF709D /* DataProvider */ = {
 			isa = PBXGroup;
 			children = (
+				6CB584BF246C63320062DF13 /* Tests */,
 				6C6698DE2469F1A3005ECA70 /* ListDataProvider.swift */,
 				6C6698E0246B1AB4005ECA70 /* PhotoDetailDataProvider.swift */,
 				6CE056DE2468876B00DF709D /* AsyncImageDataProvider.swift */,
@@ -432,6 +454,7 @@
 				6CABFF0824673742000DA06C /* AsyncImageViewModel.swift in Sources */,
 				6CA7ACD2245604DA004EC6EE /* Feedback.swift in Sources */,
 				6C0D4B922400A1EC00294299 /* Collection+Extensions.swift in Sources */,
+				6CB584C5246C87190062DF13 /* Persister.swift in Sources */,
 				6CE19B2D2468AA0400DD285B /* Comment.swift in Sources */,
 				6CED1A4F2454425B00234F45 /* JSONPlaceholderAPI.swift in Sources */,
 				6CE056DF2468876B00DF709D /* AsyncImageDataProvider.swift in Sources */,
@@ -453,6 +476,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CB584C2246C63630062DF13 /* ListDataProviderTests.swift in Sources */,
 				6CB3162724007B50002A644C /* Babylon_DemoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,5 +1,4 @@
 import Combine
-import Disk
 
 protocol ListDataProviderProtocol {
     func fetchMetadata() -> AnyPublisher<[ListView.Element], RemoteError>
@@ -8,44 +7,36 @@ protocol ListDataProviderProtocol {
 
 struct ListDataProvider: ListDataProviderProtocol {
     private let api: API
+    private let persister: PersisterProtocol
 
-    init(api: API) {
+    init(api: API, persister: PersisterProtocol) {
         self.api = api
+        self.persister = persister
     }
 
     func fetchMetadata() -> AnyPublisher<[ListView.Element], RemoteError> {
-        if let elements = try? Disk.retrieve(Self.elementsPath, from: .caches, as: [ListView.Element].self) {
-            print("elements were already present, fetching from disk")
-            return Just(elements)
-                .setFailureType(to: RemoteError.self)
-                .eraseToAnyPublisher()
+        persister.retrieve(t: [ListView.Element].self, path: Self.elementsPath)
+            .catch { _ in
+                // The API has no pagination, so given that this data
+                // is loaded extremely fast I've decided to download it
+                // in one go, decode it, and map it to `ListView.Element`.
+                // Having a paginated API would definitely be better.
+                return self.api.photos()
+                    .map { photos in photos.map(self.element(from:)) }
+                    .map { $0.sorted(by: Self.isSortedByFavourites) }
+                    .eraseToAnyPublisher()
         }
-
-        print("elements not present, fetching from network")
-
-        // The API has no pagination, so given that this data
-        // is loaded extremely fast I've decided to download it
-        // in one go, decode it, and map it to `ListView.Element`.
-        // Having a paginated API would definitely be better.
-        return api.photos()
-            .map { photos in photos.map(self.element(from:)) }
-            .map { $0.sorted(by: Self.isSortedByFavourites) }
-            .eraseToAnyPublisher()
+        .eraseToAnyPublisher()
     }
 
     func persist(elements: [ListView.Element]) -> AnyPublisher<Void, Never> {
-        if (try? Disk.retrieve(Self.elementsPath, from: .caches, as: [ListView.Element].self)) != nil {
-            print("elements were already present, skipping persisting")
-            return Just(()).eraseToAnyPublisher()
+        persister.retrieve(t: [ListView.Element].self, path: Self.elementsPath)
+            .map { _ in () }
+            .catch { _ in
+                self.persister.persist(t: elements, path: Self.elementsPath)
+                    .replaceError(with: ())
         }
-
-        if (try? Disk.save(elements, to: .caches, as: Self.elementsPath)) != nil {
-            print("Persisting elements")
-            return Just(()).eraseToAnyPublisher()
-        }
-
-        print("elements failed to persist")
-        return Just(()).eraseToAnyPublisher()
+        .eraseToAnyPublisher()
     }
 }
 

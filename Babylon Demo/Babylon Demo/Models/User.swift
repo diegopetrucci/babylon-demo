@@ -5,6 +5,7 @@ struct User {
 }
 
 extension User: Decodable {}
+extension User: Equatable {}
 
 #if DEBUG
 extension User {

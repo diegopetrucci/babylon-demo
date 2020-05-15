@@ -11,13 +11,17 @@ protocol API {
 }
 
 struct JSONPlaceholderAPI {
-    private let remote = Remote()
+    private let remote: Remoteable
     private let baseURL = URL(string: "http://jsonplaceholder.typicode.com/")!
+
+    init(remote: Remoteable) {
+        self.remote = remote
+    }
 }
 
 extension JSONPlaceholderAPI: API {
     func photos() -> AnyPublisher<[Photo], RemoteError> {
-        remote.load(from: baseURL.appendingPathComponent("photos"))
+        remote.load(from: baseURL.appendingPathComponent("photos"), jsonDecoder: JSONDecoder())
     }
 
     func image(for url: URL) -> AnyPublisher<UIImage?, Never> {
@@ -28,15 +32,15 @@ extension JSONPlaceholderAPI: API {
     }
 
     func album(with albumID: Int) -> AnyPublisher<Album, RemoteError> {
-        remote.load(from: baseURL.appendingPathComponent("albums/\(albumID)"))
+        remote.load(from: baseURL.appendingPathComponent("albums/\(albumID)"), jsonDecoder: JSONDecoder())
     }
 
     func user(with userID: Int) -> AnyPublisher<User, RemoteError> {
-        remote.load(from: baseURL.appendingPathComponent("users/\(userID)"))
+        remote.load(from: baseURL.appendingPathComponent("users/\(userID)"), jsonDecoder: JSONDecoder())
     }
 
     func comments(for photoID: Int) -> AnyPublisher<[Comment], RemoteError> {
-        remote.load(from: baseURL.appendingPathComponent("photos/\(photoID)/comments"))
+        remote.load(from: baseURL.appendingPathComponent("photos/\(photoID)/comments"), jsonDecoder: JSONDecoder())
     }
 }
 

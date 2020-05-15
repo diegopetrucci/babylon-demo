@@ -26,7 +26,7 @@ struct AsyncImageDataProvider: AsyncImageDataProviderProtocol {
         }
 
         return api.image(for: url)
-            .compactMap { $0 } // TODO should the return type be an optional?
+            .compactMap(identity) // TODO should the return type be an optional?
             .mapError { AsyncImageDataProviderError.failure(RemoteError.error($0)) }
             .eraseToAnyPublisher()
     }

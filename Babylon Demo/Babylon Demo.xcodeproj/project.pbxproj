@@ -41,6 +41,7 @@
 		6CFD09AB245768D300C1A3CE /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 6CFD09AA245768D300C1A3CE /* Then */; };
 		7CB6354A246F102F00EE92BA /* JSONPlaceholderAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB63549246F102F00EE92BA /* JSONPlaceholderAPITests.swift */; };
 		7CFF645E246F3877007CEC19 /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF645D246F3877007CEC19 /* Misc.swift */; };
+		7CFF6463246F4623007CEC19 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 7CFF6462246F4623007CEC19 /* SnapshotTesting */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CFF6463246F4623007CEC19 /* SnapshotTesting in Frameworks */,
 				6CFD09AB245768D300C1A3CE /* Then in Frameworks */,
 				6C32D08624682BCA002D7B33 /* Disk in Frameworks */,
 			);
@@ -311,6 +313,7 @@
 			packageProductDependencies = (
 				6CFD09AA245768D300C1A3CE /* Then */,
 				6C32D08524682BCA002D7B33 /* Disk */,
+				7CFF6462246F4623007CEC19 /* SnapshotTesting */,
 			);
 			productName = "Babylon Demo";
 			productReference = 6CB3160C24007B4E002A644C /* Babylon Demo.app */;
@@ -387,6 +390,7 @@
 			packageReferences = (
 				6CFD09A9245768D300C1A3CE /* XCRemoteSwiftPackageReference "Then" */,
 				6C32D08424682BCA002D7B33 /* XCRemoteSwiftPackageReference "Disk" */,
+				7CFF6461246F4623007CEC19 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 			);
 			productRefGroup = 6CB3160D24007B4E002A644C /* Products */;
 			projectDirPath = "";
@@ -798,6 +802,14 @@
 				minimumVersion = 2.6.0;
 			};
 		};
+		7CFF6461246F4623007CEC19 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -810,6 +822,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6CFD09A9245768D300C1A3CE /* XCRemoteSwiftPackageReference "Then" */;
 			productName = Then;
+		};
+		7CFF6462246F4623007CEC19 /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CFF6461246F4623007CEC19 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -8,6 +8,8 @@ struct Photo {
     let albumID: Int
 }
 
+extension Photo: Equatable {}
+
 extension Photo: Decodable {
     enum CodingKeys: String, CodingKey {
         case id

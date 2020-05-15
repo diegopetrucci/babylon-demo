@@ -26,7 +26,7 @@ final class ListViewModel: ObservableObject {
     }
     #endif
 
-    init(dataProvider: ListDataProviderProtocol, api: API = JSONPlaceholderAPI()) {
+    init(dataProvider: ListDataProviderProtocol, api: API = JSONPlaceholderAPI(remote: Remote())) {
         state = .init(status: .loading, api: api)
 
         Publishers.system(

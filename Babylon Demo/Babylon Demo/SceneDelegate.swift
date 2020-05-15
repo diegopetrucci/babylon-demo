@@ -11,7 +11,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Create the SwiftUI view that provides the window contents.
         let contentView = ListView(
-            viewModel: ListViewModel(dataProvider: ListDataProvider(api: JSONPlaceholderAPI()))
+            viewModel: ListViewModel(
+                dataProvider: ListDataProvider(
+                    api: JSONPlaceholderAPI(
+                        remote: Remote()
+                    )
+                )
+            )
         )
 
         // Use a UIHostingController as window root view controller.

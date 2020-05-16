@@ -41,6 +41,10 @@
 		6CFD09AB245768D300C1A3CE /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 6CFD09AA245768D300C1A3CE /* Then */; };
 		7CB6354A246F102F00EE92BA /* JSONPlaceholderAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB63549246F102F00EE92BA /* JSONPlaceholderAPITests.swift */; };
 		7CFF645E246F3877007CEC19 /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF645D246F3877007CEC19 /* Misc.swift */; };
+		7CFF6466246F46A7007CEC19 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 7CFF6465246F46A7007CEC19 /* SnapshotTesting */; };
+		7CFF6469246F4A2E007CEC19 /* PhotoDetailViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF6468246F4A2E007CEC19 /* PhotoDetailViewSnapshotTests.swift */; };
+		7CFF646B246F4AAB007CEC19 /* SnapshotTesting+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF646A246F4AAB007CEC19 /* SnapshotTesting+SwiftUI.swift */; };
+		7CFF646E246FF662007CEC19 /* ListViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF646D246FF662007CEC19 /* ListViewSnapshotTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +103,9 @@
 		6CED1A4E2454425B00234F45 /* JSONPlaceholderAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPlaceholderAPI.swift; sourceTree = "<group>"; };
 		7CB63549246F102F00EE92BA /* JSONPlaceholderAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPlaceholderAPITests.swift; sourceTree = "<group>"; };
 		7CFF645D246F3877007CEC19 /* Misc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
+		7CFF6468246F4A2E007CEC19 /* PhotoDetailViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewSnapshotTests.swift; sourceTree = "<group>"; };
+		7CFF646A246F4AAB007CEC19 /* SnapshotTesting+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SnapshotTesting+SwiftUI.swift"; sourceTree = "<group>"; };
+		7CFF646D246FF662007CEC19 /* ListViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewSnapshotTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +122,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CFF6466246F46A7007CEC19 /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,6 +143,7 @@
 				6C0D4B912400A1EC00294299 /* Collection+Extensions.swift */,
 				6C687EC7245ED34200DD5620 /* Fixtures */,
 				7CFF645D246F3877007CEC19 /* Misc.swift */,
+				7CFF646A246F4AAB007CEC19 /* SnapshotTesting+SwiftUI.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -145,6 +154,7 @@
 				6CB3163F24007DE7002A644C /* ListView.swift */,
 				6C0D4B8F24009A8F00294299 /* ListView.Element.swift */,
 				6CED1A4A245365D600234F45 /* ListViewModel.swift */,
+				7CFF646C246FF5EE007CEC19 /* Tests */,
 			);
 			path = ListView;
 			sourceTree = "<group>";
@@ -154,6 +164,7 @@
 			children = (
 				6C0D4B952402E5EA00294299 /* PhotoDetailView.swift */,
 				6CED1A4C2453948F00234F45 /* PhotoDetailViewModel.swift */,
+				7CFF6467246F4A14007CEC19 /* Tests */,
 			);
 			path = PhotoDetail;
 			sourceTree = "<group>";
@@ -292,6 +303,22 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		7CFF6467246F4A14007CEC19 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				7CFF6468246F4A2E007CEC19 /* PhotoDetailViewSnapshotTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		7CFF646C246FF5EE007CEC19 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				7CFF646D246FF662007CEC19 /* ListViewSnapshotTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -330,6 +357,9 @@
 				6CB3162424007B50002A644C /* PBXTargetDependency */,
 			);
 			name = "Babylon DemoTests";
+			packageProductDependencies = (
+				7CFF6465246F46A7007CEC19 /* SnapshotTesting */,
+			);
 			productName = "Babylon DemoTests";
 			productReference = 6CB3162224007B50002A644C /* Babylon DemoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -387,6 +417,7 @@
 			packageReferences = (
 				6CFD09A9245768D300C1A3CE /* XCRemoteSwiftPackageReference "Then" */,
 				6C32D08424682BCA002D7B33 /* XCRemoteSwiftPackageReference "Disk" */,
+				7CFF6464246F46A7007CEC19 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 			);
 			productRefGroup = 6CB3160D24007B4E002A644C /* Products */;
 			projectDirPath = "";
@@ -464,8 +495,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CFF646B246F4AAB007CEC19 /* SnapshotTesting+SwiftUI.swift in Sources */,
 				6CB3162724007B50002A644C /* Babylon_DemoTests.swift in Sources */,
+				7CFF6469246F4A2E007CEC19 /* PhotoDetailViewSnapshotTests.swift in Sources */,
 				7CB6354A246F102F00EE92BA /* JSONPlaceholderAPITests.swift in Sources */,
+				7CFF646E246FF662007CEC19 /* ListViewSnapshotTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -798,6 +832,14 @@
 				minimumVersion = 2.6.0;
 			};
 		};
+		7CFF6464246F46A7007CEC19 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -810,6 +852,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6CFD09A9245768D300C1A3CE /* XCRemoteSwiftPackageReference "Then" */;
 			productName = Then;
+		};
+		7CFF6465246F46A7007CEC19 /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CFF6464246F46A7007CEC19 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

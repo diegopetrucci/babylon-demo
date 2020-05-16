@@ -21,7 +21,7 @@ extension PhotoDetailView {
             return AnyView(Text("There was an error loading the image. Please go back and try again."))
         } else {
             // Ideally I would have a `switch` here, or at the very least an `if-let`
-            // but at the moment SwiftUI does not support neither
+            // but at the moment SwiftUI does not support either
             // e.g:
             // case let .loaded(title, image, author, numberOfComments, isFavourite)
             // So I had to resort to exposing these computed in the VM

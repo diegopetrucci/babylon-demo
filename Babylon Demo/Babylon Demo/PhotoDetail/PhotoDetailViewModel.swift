@@ -227,19 +227,12 @@ extension PhotoDetailViewModel {
 
 #if DEBUG
 extension PhotoDetailViewModel {
-    static func fixture() -> Self {
+    static func fixture(
+        status: PhotoDetailViewModel.Status = .loaded(.fixture())
+    ) -> Self {
         .init(
             state: .init(
-                status: PhotoDetailViewModel.Status.loaded(
-                    .init(
-                        id: 2,
-                        title: "The title of the photo is great",
-                        author: "Napoleone Bonaparte",
-                        numberOfComments: 11,
-                        isFavourite: true,
-                        photoURL: URL(string: "https://google.com")!
-                    )
-                ),
+                status: status,
                 api: APIFixture()
             ),
             title: "The title of the photo is great",
@@ -248,6 +241,19 @@ extension PhotoDetailViewModel {
             photoID: 2,
             photoURL: .fixture(),
             dataProvider: PhotoDetailDataProviderFixture()
+        )
+    }
+}
+
+extension PhotoDetailViewModel.PhotoDetail {
+    static func fixture() -> Self {
+        .init(
+            id: 2,
+            title: "The title of the photo is great",
+            author: "Napoleone Bonaparte",
+            numberOfComments: 11,
+            isFavourite: true,
+            photoURL: URL(string: "https://google.com")!
         )
     }
 }

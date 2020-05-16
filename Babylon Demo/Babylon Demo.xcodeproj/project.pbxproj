@@ -44,6 +44,7 @@
 		7CFF6466246F46A7007CEC19 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 7CFF6465246F46A7007CEC19 /* SnapshotTesting */; };
 		7CFF6469246F4A2E007CEC19 /* PhotoDetailViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF6468246F4A2E007CEC19 /* PhotoDetailViewSnapshotTests.swift */; };
 		7CFF646B246F4AAB007CEC19 /* SnapshotTesting+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF646A246F4AAB007CEC19 /* SnapshotTesting+SwiftUI.swift */; };
+		7CFF646E246FF662007CEC19 /* ListViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF646D246FF662007CEC19 /* ListViewSnapshotTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +105,7 @@
 		7CFF645D246F3877007CEC19 /* Misc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
 		7CFF6468246F4A2E007CEC19 /* PhotoDetailViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewSnapshotTests.swift; sourceTree = "<group>"; };
 		7CFF646A246F4AAB007CEC19 /* SnapshotTesting+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SnapshotTesting+SwiftUI.swift"; sourceTree = "<group>"; };
+		7CFF646D246FF662007CEC19 /* ListViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewSnapshotTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +154,7 @@
 				6CB3163F24007DE7002A644C /* ListView.swift */,
 				6C0D4B8F24009A8F00294299 /* ListView.Element.swift */,
 				6CED1A4A245365D600234F45 /* ListViewModel.swift */,
+				7CFF646C246FF5EE007CEC19 /* Tests */,
 			);
 			path = ListView;
 			sourceTree = "<group>";
@@ -304,6 +307,14 @@
 			isa = PBXGroup;
 			children = (
 				7CFF6468246F4A2E007CEC19 /* PhotoDetailViewSnapshotTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		7CFF646C246FF5EE007CEC19 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				7CFF646D246FF662007CEC19 /* ListViewSnapshotTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -488,6 +499,7 @@
 				6CB3162724007B50002A644C /* Babylon_DemoTests.swift in Sources */,
 				7CFF6469246F4A2E007CEC19 /* PhotoDetailViewSnapshotTests.swift in Sources */,
 				7CB6354A246F102F00EE92BA /* JSONPlaceholderAPITests.swift in Sources */,
+				7CFF646E246FF662007CEC19 /* ListViewSnapshotTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

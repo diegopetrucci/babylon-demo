@@ -4,27 +4,41 @@ struct ListView: View {
     @ObservedObject var viewModel: ListViewModel
     
     var body: some View {
-        Group {
-            // TODO if let having downloaded photos
-            if viewModel.state.elements.isNotEmpty() {
-                NavigationView {
-                    // TODO the VM should sort them already
-                    List(viewModel.state.elements.sorted(by: ListViewModel.isSortedByFavourites).indices, id: \.self) { index in
-                        NavigationLink(
-                            destination: self.viewModel.state.destination(for: index)
-                        ) {
-                            ListCell(
-                                image: self.viewModel.state.asyncImageView(for: index),
-                                title: self.viewModel.state.elements[index].title
-                            )
-                        }
-                        .background(self.viewModel.state.elements[index].isFavourite ? Color.yellow : nil)
-                    }
-                    .navigationBarTitle("Photos")
+        render(viewModel.state)
+    }
+
+    private func render(_ state: ListViewModel.State) -> some View {
+        // TODO: is it possible to remove the wrapping into `AnyView`s?
+        if state.status == .loading {
+            return AnyView(Text("Loading information, please wait…"))
+        } else if state.status == .error { // TODO either `error` or `notLoaded` (like PhotoDetailVM)
+            // TODO add retry button
+            return AnyView(Text("There was an error loading the image. Please go back and try again."))
+        } else {
+            // Ideally I would have a `switch` here, or at the very least an `if-let`
+            // but at the moment SwiftUI does not support either
+            // e.g:
+            // case let .loaded(title, image, author, numberOfComments, isFavourite)
+            // So I had to resort to exposing these computed in the VM
+            return AnyView(listView())
+        }
+    }
+
+    private func listView() -> some View {
+        NavigationView {
+            // TODO the VM should sort them already?
+            List(viewModel.state.elements.sorted(by: ListViewModel.isSortedByFavourites).indices, id: \.self) { index in
+                NavigationLink(
+                    destination: self.viewModel.state.destination(for: index)
+                ) {
+                    ListCell(
+                        image: self.viewModel.state.asyncImageView(for: index),
+                        title: self.viewModel.state.elements[index].title
+                    )
                 }
-            } else {
-                Text("Data has not loaded yet")
+                .background(self.viewModel.state.elements[index].isFavourite ? Color.yellow : nil)
             }
+            .navigationBarTitle("Photos")
         }
     }
 }

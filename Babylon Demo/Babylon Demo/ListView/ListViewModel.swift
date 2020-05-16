@@ -9,7 +9,10 @@ final class ListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     #if DEBUG
-    init(state: State) {
+    init(
+        state: State,
+        dataProvider: ListDataProviderProtocol
+    ) {
         self.state = state
 
         Publishers.system(
@@ -17,8 +20,8 @@ final class ListViewModel: ObservableObject {
             reduce: Self.reduce,
             scheduler: RunLoop.main,
             feedbacks: [
-                Self.whenLoadingMetadata(dataProvider: ListDataProviderFixture()),
-                Self.whenLoaded(dataProvider: ListDataProviderFixture())
+                Self.whenLoadingMetadata(dataProvider: dataProvider),
+                Self.whenLoaded(dataProvider: dataProvider)
             ]
         )
             .assign(to: \.state, on: self)
@@ -164,10 +167,14 @@ extension ListViewModel {
 
 #if DEBUG
 extension ListViewModel {
-    static func fixture() -> ListViewModel {
-        .init(
-            dataProvider: ListDataProviderFixture(),
-            api: APIFixture()
+    static func fixture(status: ListViewModel.Status = .loaded) -> ListViewModel {
+        ListViewModel(
+            state: .init(
+                status: status,
+                elements: [.fixture(isFavourite: true), .fixture(), .fixture(isFavourite: true)],
+                api: APIFixture()
+            ),
+            dataProvider: ListDataProviderFixture()
         )
     }
 }

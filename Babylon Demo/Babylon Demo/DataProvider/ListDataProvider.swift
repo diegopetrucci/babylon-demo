@@ -2,7 +2,7 @@ import Combine
 import Disk
 
 protocol ListDataProviderProtocol {
-    func fetchMetadata() -> AnyPublisher<[ListView.Element], RemoteError>
+    func fetchMetadata() -> AnyPublisher<[ListView.Element], ListDataProviderError>
     func persist(elements: [ListView.Element]) -> AnyPublisher<Void, Never>
 }
 
@@ -15,7 +15,7 @@ struct ListDataProvider: ListDataProviderProtocol {
         self.persister = persister
     }
 
-    func fetchMetadata() -> AnyPublisher<[ListView.Element], RemoteError> {
+    func fetchMetadata() -> AnyPublisher<[ListView.Element], ListDataProviderError> {
         persister.fetch(type: [ListView.Element].self, path: Self.elementsPath)
             .catch { _ in
                 // The API has no pagination, so given that this data
@@ -27,6 +27,7 @@ struct ListDataProvider: ListDataProviderProtocol {
                     .map { $0.sorted(by: Self.isSortedByFavourites) }
                     .eraseToAnyPublisher()
         }
+        .mapError { _ in .error }
         .eraseToAnyPublisher()
     }
 
@@ -68,16 +69,20 @@ extension ListDataProvider {
     private static var elementsPath = "/ListView/elements"
 }
 
+enum ListDataProviderError: Error {
+    case error
+}
+
 #if DEBUG
 struct ListDataProviderFixture: ListDataProviderProtocol {
-    func fetchMetadata() -> AnyPublisher<[ListView.Element], RemoteError> {
+    func fetchMetadata() -> AnyPublisher<[ListView.Element], ListDataProviderError> {
         Just([
             ListView.Element.fixture(isFavourite: true),
             ListView.Element.fixture(),
             ListView.Element.fixture(),
             ListView.Element.fixture()
         ])
-            .setFailureType(to: RemoteError.self)
+            .setFailureType(to: ListDataProviderError.self)
             .eraseToAnyPublisher()
     }
 

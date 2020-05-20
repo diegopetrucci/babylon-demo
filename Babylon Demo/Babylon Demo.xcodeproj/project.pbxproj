@@ -36,6 +36,7 @@
 		6CB3162724007B50002A644C /* Babylon_DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3162624007B50002A644C /* Babylon_DemoTests.swift */; };
 		6CB3163224007B51002A644C /* Babylon_DemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3163124007B51002A644C /* Babylon_DemoUITests.swift */; };
 		6CB3164024007DE7002A644C /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3163F24007DE7002A644C /* ListView.swift */; };
+		6CC819E72475CB97009922AF /* PhotoDetailProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC819E62475CB97009922AF /* PhotoDetailProviderTests.swift */; };
 		6CE056DF2468876B00DF709D /* AsyncImageDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE056DE2468876B00DF709D /* AsyncImageDataProvider.swift */; };
 		6CE19B2D2468AA0400DD285B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE19B2C2468AA0400DD285B /* Comment.swift */; };
 		6CED1A4B245365D600234F45 /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CED1A4A245365D600234F45 /* ListViewModel.swift */; };
@@ -102,6 +103,7 @@
 		6CB3163124007B51002A644C /* Babylon_DemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Babylon_DemoUITests.swift; sourceTree = "<group>"; };
 		6CB3163324007B51002A644C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6CB3163F24007DE7002A644C /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		6CC819E62475CB97009922AF /* PhotoDetailProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailProviderTests.swift; sourceTree = "<group>"; };
 		6CE056DE2468876B00DF709D /* AsyncImageDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageDataProvider.swift; sourceTree = "<group>"; };
 		6CE19B2C2468AA0400DD285B /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		6CED1A4A245365D600234F45 /* ListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModel.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				6C5D701524730092001A0366 /* ListDataProviderTests.swift */,
+				6CC819E62475CB97009922AF /* PhotoDetailProviderTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -533,6 +536,7 @@
 				6CB3162724007B50002A644C /* Babylon_DemoTests.swift in Sources */,
 				6C8628502475A6D800FC782F /* PersisterTests.swift in Sources */,
 				6C5D701624730092001A0366 /* ListDataProviderTests.swift in Sources */,
+				6CC819E72475CB97009922AF /* PhotoDetailProviderTests.swift in Sources */,
 				7CFF6469246F4A2E007CEC19 /* PhotoDetailViewSnapshotTests.swift in Sources */,
 				7CB6354A246F102F00EE92BA /* JSONPlaceholderAPITests.swift in Sources */,
 				7CFF646E246FF662007CEC19 /* ListViewSnapshotTests.swift in Sources */,

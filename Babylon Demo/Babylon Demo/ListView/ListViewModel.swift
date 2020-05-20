@@ -120,7 +120,7 @@ extension ListViewModel {
                     photoID: element.id,
                     photoURL: element.photoURL,
                     api: api,
-                    dataProvider: PhotoDetailDataProvider(api: api)
+                    dataProvider: PhotoDetailDataProvider(api: api, persister: Persister())
                 )
             )
         }

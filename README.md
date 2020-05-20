@@ -21,3 +21,4 @@ Babylon demo project in SwiftUI &amp; Combine
 * write to disk
 * create a feedback initializers that lenses the state's status
 * add reachability
+* move integration tests to another target

@@ -187,8 +187,10 @@ extension PhotoDetailViewModel {
             AsyncImageView( // Note: same consideration as per the AsyncImageViewModel in ListView s
                 viewModel: .init(
                     url: photoDetail.photoURL,
-                    imagePath: "/PhotoDetail/\(photoDetail.id)",
-                    dataProvider: AsyncImageDataProvider(api: api)
+                    dataProvider: AsyncImageDataProvider(
+                        api: api,
+                        persister: ImagePersister()
+                    )
                 )
             )
         }

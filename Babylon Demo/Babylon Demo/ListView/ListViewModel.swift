@@ -131,8 +131,10 @@ extension ListViewModel {
             return AsyncImageView(
                 viewModel: AsyncImageViewModel(
                     url: element.thumbnailURL,
-                    imagePath: "/ListView/\(element.id)",
-                    dataProvider: AsyncImageDataProvider(api: api) // TODO the VM should not be creating this
+                    dataProvider: AsyncImageDataProvider(
+                        api: api,
+                        persister: ImagePersister()
+                    ) // TODO the VM should not be creating this
                 )
             )
         }

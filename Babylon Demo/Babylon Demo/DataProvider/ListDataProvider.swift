@@ -33,8 +33,8 @@ struct ListDataProvider: ListDataProviderProtocol {
 
     func persist(elements: [ListView.Element]) -> AnyPublisher<Void, Never> {
         persister.persist(t: elements, path: Self.elementsPath)
-            .replaceError(with: PersistanceResult.dataAlreadyPresent) // TODO handle error
             .map { _ in () } // We just care about the completion of the publisher. Similar to `.then()`
+            .replaceError(with: ()) // TODO handle error
             .eraseToAnyPublisher()
     }
 }

@@ -14,6 +14,12 @@ struct AsyncImageView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                 )
+            } else if case .persisted = viewModel.state.status {
+                return AnyView(
+                    Image(uiImage: viewModel.state.image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                )
             } else {
                 return AnyView(
                     Image(uiImage: AsyncImageViewModel.placeholder)

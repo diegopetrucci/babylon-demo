@@ -45,17 +45,19 @@ extension AsyncImageViewModel {
         case .ui(.onAppear):
             // if we already have an image loaded we keep the loaded state,
             // otherwise we go back to .idle to give it another chance to load
-            if case .loaded = state.status {
+            switch state.status {
+            case .loaded, .persisted:
                 return state
-            } else {
+            case .idle, .loading, .failed:
                 return state.with { $0.status = .loading }
             }
         case .ui(.onDisappear):
             // if we already have an image loaded we keep the loaded state,
             // otherwise we go back to .idle to give it another chance to load
-            if case .loaded = state.status {
+            switch state.status {
+            case .loaded, .persisted:
                 return state
-            } else {
+            case .idle, .loading, .failed:
                 return state.with { $0.status = .idle }
             }
         case let .loaded(image):
@@ -66,8 +68,8 @@ extension AsyncImageViewModel {
             }
         case .failedToLoad:
             return state
-        case .persisted:
-            return state
+        case let .persisted(image):
+            return state.with { $0.status = .persisted(image: image) }
         }
     }
 }
@@ -95,7 +97,7 @@ extension AsyncImageViewModel {
             guard case let .loaded(image) = state.status else { return Empty().eraseToAnyPublisher() }
 
             return dataProvider.persistImage(image: image, url: url)
-                .map{ _ in Event.persisted }
+                .map{ _ in Event.persisted(image) }
                 .eraseToAnyPublisher()
         }
     }
@@ -118,6 +120,8 @@ extension AsyncImageViewModel {
         var image: UIImage {
             if case let .loaded(image) = status {
                 return image
+            } else if case let .persisted(image) = status {
+                return image
             } else {
                 fatalError("This should never be called, the view is misconfigured.")
             }
@@ -129,13 +133,14 @@ extension AsyncImageViewModel {
         case loading
         case loaded(image: UIImage)
         case failed(placeholder: UIImage)
+        case persisted(image: UIImage)
     }
 
     enum Event {
         case ui(UI)
         case loaded(UIImage?)
         case failedToLoad
-        case persisted
+        case persisted(UIImage)
 
         enum UI {
             case onAppear

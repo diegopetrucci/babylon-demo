@@ -107,6 +107,8 @@ extension PhotoDetailViewModel {
         case let .ui(ui):
             switch ui {
             case .onAppear:
+                guard state.status == .idle else { return state }
+
                 return state.with { $0.status = .loading }
             case .tappedFavouriteButton:
                 return state // TODO

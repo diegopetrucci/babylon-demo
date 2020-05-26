@@ -18,7 +18,8 @@ final class PhotoDetailViewModel: ObservableObject {
         albumID: Int,
         photoID: Int,
         photoURL: URL,
-        dataProvider: PhotoDetailDataProviderProtocol
+        authorDataProvider: AuthorDataProviderProtocol,
+        numberOfCommentsDataProvider: NumberOfCommentsDataProviderProtocol
     ) {
         self.state = state
 
@@ -27,16 +28,23 @@ final class PhotoDetailViewModel: ObservableObject {
             reduce: Self.reduce,
             scheduler: RunLoop.main,
             feedbacks: [
-                Self.userInput(input: input.eraseToAnyPublisher()),
+                Self.userInput(
+                    input: input.eraseToAnyPublisher()
+                ),
                 Self.whenLoading(
                     albumID: albumID,
                     photoID: photoID,
                     title: title,
                     isFavourite: isFavourite,
                     photoURL: photoURL,
-                    dataProvider: dataProvider
+                    authorDataProvider: authorDataProvider,
+                    numberOfCommentsDataProvider: numberOfCommentsDataProvider
                 ),
-                Self.whenPersisting(dataProvider: dataProvider, photoID: photoID)
+                Self.whenPersisting(
+                    authorDataProvider: authorDataProvider,
+                    numberOfCommentsDataProvider: numberOfCommentsDataProvider,
+                    photoID: photoID
+                )
             ]
         )
             .assign(to: \.state, on: self)
@@ -51,7 +59,8 @@ final class PhotoDetailViewModel: ObservableObject {
         photoID: Int,
         photoURL: URL,
         api: API,
-        dataProvider: PhotoDetailDataProviderProtocol
+        authorDataProvider: AuthorDataProviderProtocol,
+        numberOfCommentsDataProvider: NumberOfCommentsDataProviderProtocol
     ) {
         state = State(status: .idle, api: api)
 
@@ -60,16 +69,23 @@ final class PhotoDetailViewModel: ObservableObject {
             reduce: Self.reduce,
             scheduler: RunLoop.main,
             feedbacks: [
-                Self.userInput(input: input.eraseToAnyPublisher()),
+                Self.userInput(
+                    input: input.eraseToAnyPublisher()
+                ),
                 Self.whenLoading(
                     albumID: albumID,
                     photoID: photoID,
                     title: title,
                     isFavourite: isFavourite,
                     photoURL: photoURL,
-                    dataProvider: dataProvider
+                    authorDataProvider: authorDataProvider,
+                    numberOfCommentsDataProvider: numberOfCommentsDataProvider
                 ),
-                Self.whenPersisting(dataProvider: dataProvider, photoID: photoID)
+                Self.whenPersisting(
+                    authorDataProvider: authorDataProvider,
+                    numberOfCommentsDataProvider: numberOfCommentsDataProvider,
+                    photoID: photoID
+                )
             ]
         )
             .assign(to: \.state, on: self)
@@ -118,12 +134,16 @@ extension PhotoDetailViewModel {
         title: String,
         isFavourite: Bool,
         photoURL: URL,
-        dataProvider: PhotoDetailDataProviderProtocol
+        authorDataProvider: AuthorDataProviderProtocol,
+        numberOfCommentsDataProvider: NumberOfCommentsDataProviderProtocol
     ) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
             guard case .loading = state.status else { return Empty().eraseToAnyPublisher() }
 
-            return dataProvider.fetchAuthorAndNumberOfComments(albumID: albumID, photoID: photoID)
+            return Publishers.Zip(
+                authorDataProvider.fetch(albumID: albumID, photoID: photoID),
+                numberOfCommentsDataProvider.fetch(photoID: photoID)
+            )
                 .map { (author, numberOfComments) in
                     Event.loaded(
                         PhotoDetail(
@@ -142,16 +162,19 @@ extension PhotoDetailViewModel {
     }
 
     private static func whenPersisting(
-        dataProvider: PhotoDetailDataProviderProtocol,
+        authorDataProvider: AuthorDataProviderProtocol,
+        numberOfCommentsDataProvider: NumberOfCommentsDataProviderProtocol,
         photoID: Int
     ) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
             guard case .loaded = state.status else { return Empty().eraseToAnyPublisher() }
 
-            return dataProvider.persist(
-                author: state.photoDetail.author,
-                numberOfComments: state.photoDetail.numberOfComments,
-                photoID: photoID
+            return Publishers.Zip(
+                authorDataProvider.persist(author: state.photoDetail.author, photoID: photoID),
+                numberOfCommentsDataProvider.persist(
+                    numberOfComments: state.photoDetail.numberOfComments,
+                    photoID: photoID
+                )
             )
                 .map { _ in Event.persisted }
                 .eraseToAnyPublisher()
@@ -242,7 +265,8 @@ extension PhotoDetailViewModel {
             albumID: 1,
             photoID: 2,
             photoURL: .fixture(),
-            dataProvider: PhotoDetailDataProviderFixture()
+            authorDataProvider: AuthorDataProviderFixture(),
+            numberOfCommentsDataProvider: NumberOfCommentsDataProviderFixture()
         )
     }
 }

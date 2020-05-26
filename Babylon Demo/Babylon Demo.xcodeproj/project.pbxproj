@@ -13,6 +13,7 @@
 		6C0D4B9D24032C7000294299 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6C0D4B9C24032C7000294299 /* README.md */; };
 		6C1A3E1F245ECCE800382F30 /* URL+Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C1A3E1E245ECCE800382F30 /* URL+Fixture.swift */; };
 		6C1A3E21245ECD6000382F30 /* UIImage+Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C1A3E20245ECD6000382F30 /* UIImage+Fixture.swift */; };
+		6C1E9D42247DA015007F064F /* NumberOfCommentsDataProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C1E9D41247DA015007F064F /* NumberOfCommentsDataProviderTests.swift */; };
 		6C32D08624682BCA002D7B33 /* Disk in Frameworks */ = {isa = PBXBuildFile; productRef = 6C32D08524682BCA002D7B33 /* Disk */; };
 		6C5D701624730092001A0366 /* ListDataProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5D701524730092001A0366 /* ListDataProviderTests.swift */; };
 		6C6698DF2469F1A3005ECA70 /* ListDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6698DE2469F1A3005ECA70 /* ListDataProvider.swift */; };
@@ -37,7 +38,7 @@
 		6CB3162724007B50002A644C /* Babylon_DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3162624007B50002A644C /* Babylon_DemoTests.swift */; };
 		6CB3163224007B51002A644C /* Babylon_DemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3163124007B51002A644C /* Babylon_DemoUITests.swift */; };
 		6CB3164024007DE7002A644C /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB3163F24007DE7002A644C /* ListView.swift */; };
-		6CC819E72475CB97009922AF /* PhotoDetailProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC819E62475CB97009922AF /* PhotoDetailProviderTests.swift */; };
+		6CC819E72475CB97009922AF /* AuthorDataProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC819E62475CB97009922AF /* AuthorDataProviderTests.swift */; };
 		6CC819E92475D04E009922AF /* ImagePersister.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC819E82475D04E009922AF /* ImagePersister.swift */; };
 		6CC819EB2475D404009922AF /* ImagePersisterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC819EA2475D404009922AF /* ImagePersisterTests.swift */; };
 		6CE056DF2468876B00DF709D /* AsyncImageDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE056DE2468876B00DF709D /* AsyncImageDataProvider.swift */; };
@@ -78,6 +79,7 @@
 		6C0D4B9C24032C7000294299 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		6C1A3E1E245ECCE800382F30 /* URL+Fixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Fixture.swift"; sourceTree = "<group>"; };
 		6C1A3E20245ECD6000382F30 /* UIImage+Fixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Fixture.swift"; sourceTree = "<group>"; };
+		6C1E9D41247DA015007F064F /* NumberOfCommentsDataProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberOfCommentsDataProviderTests.swift; sourceTree = "<group>"; };
 		6C5D701524730092001A0366 /* ListDataProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDataProviderTests.swift; sourceTree = "<group>"; };
 		6C6698DE2469F1A3005ECA70 /* ListDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDataProvider.swift; sourceTree = "<group>"; };
 		6C6698E0246B1AB4005ECA70 /* PhotoDetailDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailDataProvider.swift; sourceTree = "<group>"; };
@@ -107,7 +109,7 @@
 		6CB3163124007B51002A644C /* Babylon_DemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Babylon_DemoUITests.swift; sourceTree = "<group>"; };
 		6CB3163324007B51002A644C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6CB3163F24007DE7002A644C /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
-		6CC819E62475CB97009922AF /* PhotoDetailProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailProviderTests.swift; sourceTree = "<group>"; };
+		6CC819E62475CB97009922AF /* AuthorDataProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorDataProviderTests.swift; sourceTree = "<group>"; };
 		6CC819E82475D04E009922AF /* ImagePersister.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePersister.swift; sourceTree = "<group>"; };
 		6CC819EA2475D404009922AF /* ImagePersisterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePersisterTests.swift; sourceTree = "<group>"; };
 		6CE056DE2468876B00DF709D /* AsyncImageDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageDataProvider.swift; sourceTree = "<group>"; };
@@ -187,7 +189,8 @@
 			isa = PBXGroup;
 			children = (
 				6C5D701524730092001A0366 /* ListDataProviderTests.swift */,
-				6CC819E62475CB97009922AF /* PhotoDetailProviderTests.swift */,
+				6CC819E62475CB97009922AF /* AuthorDataProviderTests.swift */,
+				6C1E9D41247DA015007F064F /* NumberOfCommentsDataProviderTests.swift */,
 				6C72022D2475D8D70050FF80 /* AsyncImageDataProviderTests.swift */,
 			);
 			path = Tests;
@@ -544,10 +547,11 @@
 			files = (
 				7CFF646B246F4AAB007CEC19 /* SnapshotTesting+SwiftUI.swift in Sources */,
 				6CC819EB2475D404009922AF /* ImagePersisterTests.swift in Sources */,
+				6C1E9D42247DA015007F064F /* NumberOfCommentsDataProviderTests.swift in Sources */,
 				6CB3162724007B50002A644C /* Babylon_DemoTests.swift in Sources */,
 				6C8628502475A6D800FC782F /* PersisterTests.swift in Sources */,
 				6C5D701624730092001A0366 /* ListDataProviderTests.swift in Sources */,
-				6CC819E72475CB97009922AF /* PhotoDetailProviderTests.swift in Sources */,
+				6CC819E72475CB97009922AF /* AuthorDataProviderTests.swift in Sources */,
 				7CFF6469246F4A2E007CEC19 /* PhotoDetailViewSnapshotTests.swift in Sources */,
 				6C72022E2475D8D70050FF80 /* AsyncImageDataProviderTests.swift in Sources */,
 				7CB6354A246F102F00EE92BA /* JSONPlaceholderAPITests.swift in Sources */,

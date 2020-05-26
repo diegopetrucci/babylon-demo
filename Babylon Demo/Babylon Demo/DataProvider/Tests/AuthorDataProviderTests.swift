@@ -2,44 +2,40 @@ import Combine
 import XCTest
 @testable import Babylon_Demo
 
-final class PhotoDetailDataProviderTests: XCTest {
-    func test_fetchAuthorAndNumberOfComments_fromAPI() {
-        let dataProvider = PhotoDetailDataProvider(
+final class AuthorDataProviderTests: XCTestCase {
+    func test_fetchAuthor_fromAPI() {
+        let dataProvider = AuthorDataProvider(
             api: APIFixture(),
-            persister: PhotoDetailPersisterFixture()
+            persister: AuthorPersisterFixture()
         )
 
         let expectation = XCTestExpectation() // TODO
 
-        let _ = dataProvider.fetchAuthorAndNumberOfComments(albumID: 1, photoID: 2)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .finished:
-                    expectation.fulfill()
-                case let .failure(error):
-                    XCTFail(error.localizedDescription)
-                }
-            }) { author, numberOfComments in
-                XCTAssertEqual("author", author)
-                XCTAssertEqual(1, numberOfComments)
+        let _ = dataProvider.fetch(albumID: 1, photoID: 2)
+            .sink(
+                receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        expectation.fulfill()
+                    case let .failure(error):
+                        XCTFail(error.localizedDescription)
+                    }
+            }) { author in
+                XCTAssertEqual("Ted Chiang", author)
         }
     }
 
-    func test_fetchAuthorAndNumberOfComments_fromPersistence() {
+    func test_fetchAuthor_fromPersistence() {
         let expectedAuthor = "Liu Cixin"
-        let expectedNumberOfComments = 83
 
-        let dataProvider = PhotoDetailDataProvider(
+        let dataProvider = AuthorDataProvider(
             api: APIFixture(),
-            persister: PhotoDetailPersisterFixture(
-                author: expectedAuthor,
-                numberOfComments: expectedNumberOfComments
-            )
+            persister: AuthorPersisterFixture(author: expectedAuthor)
         )
 
         let expectation = XCTestExpectation() // TODO
 
-        let _ = dataProvider.fetchAuthorAndNumberOfComments(albumID: 1, photoID: 2)
+        let _ = dataProvider.fetch(albumID: 1, photoID: 2)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
@@ -47,21 +43,18 @@ final class PhotoDetailDataProviderTests: XCTest {
                 case let .failure(error):
                     XCTFail(error.localizedDescription)
                 }
-            }) { author, numberOfComments in
+            }) { author in
                 XCTAssertEqual(expectedAuthor, author)
-                XCTAssertEqual(expectedNumberOfComments, numberOfComments)
         }
     }
 
     func test_persist_whenDataIsAlreadyPresent() {
         let expectedAuthor = "Liu Cixin"
-        let expectedNumberOfComments = 83
 
-        let dataProvider = PhotoDetailDataProvider(
+        let dataProvider = AuthorDataProvider(
             api: APIFixture(),
-            persister: PhotoDetailPersisterFixture(
-                author: expectedAuthor,
-                numberOfComments: expectedNumberOfComments
+            persister: AuthorPersisterFixture(
+                author: expectedAuthor
             )
         )
 
@@ -69,7 +62,6 @@ final class PhotoDetailDataProviderTests: XCTest {
 
         let _ = dataProvider.persist(
             author: expectedAuthor,
-            numberOfComments: expectedNumberOfComments,
             photoID: 3
         )
             .sink(
@@ -86,14 +78,14 @@ final class PhotoDetailDataProviderTests: XCTest {
     }
 
     func test_persist_whenDataIsNotAlreadyPresent() {
-        let dataProvider = PhotoDetailDataProvider(
+        let dataProvider = AuthorDataProvider(
             api: APIFixture(),
-            persister: PhotoDetailPersisterFixture()
+            persister: AuthorPersisterFixture()
         )
 
         let expectation = XCTestExpectation() // TODO
 
-        let _ = dataProvider.fetchAuthorAndNumberOfComments(albumID: 1, photoID: 2)
+        let _ = dataProvider.persist(author: "Ted Chiang", photoID: 5)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
@@ -107,23 +99,21 @@ final class PhotoDetailDataProviderTests: XCTest {
     // TODO: test errors
 }
 
-struct PhotoDetailPersisterFixture: PersisterProtocol {
+struct AuthorPersisterFixture: PersisterProtocol {
     var author: String?
-    var numberOfComments: Int?
 
+    // This is kind of ugly but it's the only way I've found
+    // to erase the two types `String` and `Int`.
     func fetch<T: Codable>(type: T.Type, path: String) -> AnyPublisher<T, PersisterError> {
-        guard
-            let author = author,
-            let numberOfComments = numberOfComments
-        else { return Fail<T, PersisterError>(error: .error) .eraseToAnyPublisher() }
+        let _author = author ?? "Ted Chiang"
 
-        return Just((author, numberOfComments) as! T)
-                .setFailureType(to: PersisterError.self)
-                .eraseToAnyPublisher()
+        return Just(_author as! T)
+        .setFailureType(to: PersisterError.self)
+        .eraseToAnyPublisher()
     }
 
     func persist<T: Codable>(t: T, path: String) -> AnyPublisher<PersistanceResult, PersisterError> {
-        guard author == nil || numberOfComments == nil else {
+        guard author == nil else {
             return Just(.dataAlreadyPresent)
                 .setFailureType(to: PersisterError.self)
                 .eraseToAnyPublisher()

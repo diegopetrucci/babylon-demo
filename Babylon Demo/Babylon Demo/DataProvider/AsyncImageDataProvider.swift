@@ -5,42 +5,35 @@ import class Foundation.URLSession
 import Disk
 
 protocol AsyncImageDataProviderProtocol {
-    func fetchImage(url: URL, imagePath: String) -> AnyPublisher<UIImage, AsyncImageDataProviderError>
-    func persistImage(image: UIImage, imagePath: String) -> AnyPublisher<Void, Never>
+    func fetchImage(url: URL) -> AnyPublisher<UIImage, AsyncImageDataProviderError>
+    func persistImage(image: UIImage, url: URL) -> AnyPublisher<Void, Never>
 }
 
 struct AsyncImageDataProvider: AsyncImageDataProviderProtocol {
     private let api: API
+    private let persister: ImagePersisterProtocol
 
-    init(api: API) {
+    init(api: API, persister: ImagePersisterProtocol) {
         self.api = api
+        self.persister = persister
     }
     
-    func fetchImage(url: URL, imagePath: String) -> AnyPublisher<UIImage, AsyncImageDataProviderError> {
-        if let image = try? Disk.retrieve(imagePath, from: .caches, as: UIImage.self) {
-            print("Image retrieved at path: \(imagePath)")
-
-            return Just(image)
-                .setFailureType(to: AsyncImageDataProviderError.self)
-                .eraseToAnyPublisher()
-        }
-
-        return api.image(for: url)
-            .compactMap(identity) // TODO should the return type be an optional?
-            .mapError { AsyncImageDataProviderError.failure(RemoteError.error($0)) }
+    func fetchImage(url: URL) -> AnyPublisher<UIImage, AsyncImageDataProviderError> {
+        persister.fetch(path: url.absoluteString)
+            .catch { _ in
+                self.api.image(for: url)
+                    .compactMap(identity) // TODO should the return type be an optional?
+                    .mapError { AsyncImageDataProviderError.failure(RemoteError.error($0)) }
+                    .eraseToAnyPublisher()
+            }
             .eraseToAnyPublisher()
     }
 
-    func persistImage(image: UIImage, imagePath: String) -> AnyPublisher<Void, Never> {
-        if (try? Disk.retrieve(imagePath, from: .caches, as: UIImage.self)) != nil {
-            print("Image already present at path: \(imagePath)")
-            return Empty().eraseToAnyPublisher()
-        }
-
-        try? Disk.save(image, to: .caches, as: imagePath)
-        print("Image saved at path: \(imagePath)")
-
-        return Empty().eraseToAnyPublisher()
+    func persistImage(image: UIImage, url: URL) -> AnyPublisher<Void, Never> {
+        persister.persist(uiImage: image, path: url.absoluteString)
+            .map { _ in }
+            .replaceError(with: ())
+            .eraseToAnyPublisher()
     }
 }
 
@@ -50,13 +43,13 @@ enum AsyncImageDataProviderError: Error {
 
 #if DEBUG
 struct AsyncImageDataProviderFixture: AsyncImageDataProviderProtocol {
-    func fetchImage(url: URL, imagePath: String) -> AnyPublisher<UIImage, AsyncImageDataProviderError> {
+    func fetchImage(url: URL) -> AnyPublisher<UIImage, AsyncImageDataProviderError> {
         Just(UIImage.fixture())
             .setFailureType(to: AsyncImageDataProviderError.self)
             .eraseToAnyPublisher()
     }
 
-    func persistImage(image: UIImage, imagePath: String) -> AnyPublisher<Void, Never> {
+    func persistImage(image: UIImage, url: URL) -> AnyPublisher<Void, Never> {
         Just(())
             .eraseToAnyPublisher()
     }

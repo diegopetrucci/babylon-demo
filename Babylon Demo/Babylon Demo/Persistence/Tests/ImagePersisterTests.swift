@@ -4,8 +4,8 @@ import Disk
 @testable import Babylon_Demo
 
 // Integration tests
-final class PersisterTests: XCTestCase {
-    let path = "/path"
+final class ImagePersisterTests: XCTestCase {
+    let path = "/photo/1"
 
     override func setUp() {
         try? Disk.remove(path, from: .caches)
@@ -14,11 +14,11 @@ final class PersisterTests: XCTestCase {
     func test_persist_whenDataNotPresent() {
         defer { try! Disk.remove(path, from: .caches) }
 
-        let persister = Persister()
+        let persister = ImagePersister()
 
         let expectation = XCTestExpectation() // TODO
 
-        let _ = persister.persist(t: 1, path: path)
+        let _ = persister.persist(uiImage: .fixture(), path: path)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case let .failure(error):
@@ -41,13 +41,13 @@ final class PersisterTests: XCTestCase {
     // slightly more precise with the errors given
     func test_persist_whenDataIsAlreadyPresent() {
         defer { try! Disk.remove(path, from: .caches) }
-        
-        let persister = Persister()
+
+        let persister = ImagePersister()
 
         let expectation = XCTestExpectation() // TODO
 
         // Persist the data
-        let _ = persister.persist(t: 1, path: path)
+        let _ = persister.persist(uiImage: .fixture(), path: path)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case let .failure(error):
@@ -65,7 +65,7 @@ final class PersisterTests: XCTestCase {
         }
 
         // Check that is correctly recognizing the data is already persisted
-        let _ = persister.persist(t: 1, path: path)
+        let _ = persister.persist(uiImage: .fixture(), path: "/photo/1")
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case let .failure(error):

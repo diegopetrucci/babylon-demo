@@ -12,7 +12,6 @@ final class AsyncImageViewModel: ObservableObject {
 
     init(
         url: URL,
-        imagePath: String, // TODO should these be removed and injected directly to the data provider?
         dataProvider: AsyncImageDataProviderProtocol
     ) {
         self.state = State(
@@ -24,8 +23,8 @@ final class AsyncImageViewModel: ObservableObject {
             reduce: Self.reduce,
             scheduler: RunLoop.main,
             feedbacks: [
-                Self.whenLoading(url: url, imagePath: imagePath, dataProvider: dataProvider),
-                Self.whenLoaded(imagePath: imagePath, dataProvider: dataProvider),
+                Self.whenLoading(url: url, dataProvider: dataProvider),
+                Self.whenLoaded(url: url, dataProvider: dataProvider),
                 Self.userInput(input.eraseToAnyPublisher())
             ]
         )
@@ -76,13 +75,12 @@ extension AsyncImageViewModel {
 extension AsyncImageViewModel {
     private static func whenLoading(
         url: URL,
-        imagePath: String,
         dataProvider: AsyncImageDataProviderProtocol
     ) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
             guard case .loading = state.status else { return Empty().eraseToAnyPublisher() }
 
-            return dataProvider.fetchImage(url: url, imagePath: imagePath)
+            return dataProvider.fetchImage(url: url)
                 .map(Event.loaded)
                 .replaceError(with: .failedToLoad)
                 .eraseToAnyPublisher()
@@ -90,13 +88,13 @@ extension AsyncImageViewModel {
     }
 
     private static func whenLoaded(
-        imagePath: String,
+        url: URL,
         dataProvider: AsyncImageDataProviderProtocol
     ) -> Feedback<State, Event> {
         Feedback { (state: State) -> AnyPublisher<Event, Never> in
             guard case let .loaded(image) = state.status else { return Empty().eraseToAnyPublisher() }
 
-            return dataProvider.persistImage(image: image, imagePath: imagePath)
+            return dataProvider.persistImage(image: image, url: url)
                 .map{ _ in Event.persisted }
                 .eraseToAnyPublisher()
         }
@@ -148,7 +146,7 @@ extension AsyncImageViewModel {
 
 extension AsyncImageViewModel {
     static var placeholder: UIImage {
-        UIImage(named: "thumbnail_mock")!
+        UIImage(named: "thumbnail_fixture")!
     }
 }
 
@@ -157,7 +155,6 @@ extension AsyncImageViewModel {
     static func fixture() -> AsyncImageViewModel {
         AsyncImageViewModel.init(
             url: .fixture(),
-            imagePath: "/Fixture/photo",
             dataProvider: AsyncImageDataProviderFixture()
         )
     }

@@ -47,3 +47,4 @@ On to the libraries:
 * create a feedback initializers that lenses the state's status
 * add reachability
 * cancel network calls for images if the view didDisappear and it was not completed
+* move integration tests to another target

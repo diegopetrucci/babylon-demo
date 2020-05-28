@@ -15,7 +15,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 dataProvider: ListDataProvider(
                     api: JSONPlaceholderAPI(
                         remote: Remote()
-                    )
+                    ),
+                    persister: Persister()
                 )
             )
         )

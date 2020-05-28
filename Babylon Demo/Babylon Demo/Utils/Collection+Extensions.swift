@@ -1,5 +1,5 @@
 extension Collection {
-    func isNotEmpty() -> Bool {
+    var isNotEmpty: Bool {
         !self.isEmpty
     }
 }
